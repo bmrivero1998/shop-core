@@ -1,0 +1,7 @@
+# Ignorar el archivo de configuración real para no filtrar UUIDs de clientes
+# config.ts
+
+# Ignorar logs y archivos temporales
+node_modules/
+.DS_Store
+dist/
