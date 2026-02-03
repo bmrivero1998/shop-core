@@ -1,9 +1,3 @@
-Tienes toda la razón. En este nivel técnico, **asumir es el primer paso para que algo truene**. Vamos a hacer un README que sea un contrato técnico real, especificando qué necesita el proyecto para "recibir" este módulo y cómo se opera sin dar nada por sentado.
-
-Aquí tienes la versión robusta:
-
----
-
 # 🛒 Shop Core - Manual de Integración
 
 Este repositorio contiene el motor de tienda para la suite **UXDriven**. Está diseñado para ser inyectado como un submódulo de Git en aplicaciones de React.
@@ -20,6 +14,8 @@ Ejecuta en la raíz del proyecto principal:
 npm install lucide-react axios clsx tailwind-merge
 
 ```
+
+"Cada proyecto requiere un archivo config.ts. Usa config.example.ts como base."
 
 ### Configuración de Estilos (Tailwind)
 
