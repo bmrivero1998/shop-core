@@ -11,13 +11,35 @@ export interface CartItem {
   quantity: number;
   sku?: string;
   category_id?: string;
+  selectedVariant?: {
+  uuid: string;
+  variant_name: string;
+};
 }
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: any) => void;
-  removeFromCart: (uuid: string) => void;
-  updateQuantity: (uuid: string, delta: number) => void;
+  addToCart: (product: {
+  uuid: string;
+  name: string;
+  price: number;
+  currency: string;
+  images?: string;
+  image?: string;
+  quantity?: number;
+  sku?: string;
+  category_id?: string;
+  selectedVariant?: {
+    uuid: string;
+    variant_name: string;
+    price_override?: number;
+  };
+}) => void;
+
+removeFromCart: (uuid: string, variantUuid?: string) => void;
+
+updateQuantity: (uuid: string, delta: number, variantUuid?: string) => void;
+
   clearCart: () => void;
   cartTotal: number;
   cartCurrency: string;
@@ -68,61 +90,86 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // --- LÓGICA DE AGREGAR (EL GUARDIÁN) ---
-  const addToCart = (product: any) => {
-    const newCurrency = (product.currency || 'mxn').toLowerCase();
-    const qtyToAdd = product.quantity || 1;
+const addToCart = (product: any) => {
+  const newCurrency = (product.currency || 'mxn').toLowerCase();
+  const qtyToAdd = product.quantity || 1;
+  const variant = product.selectedVariant;
 
-    // VALIDACIÓN: Evitar mezcla de monedas (Stripe no lo permite)
-    if (cart.length > 0) {
-      const currentCurrency = cart[0].currency.toLowerCase();
-      if (currentCurrency !== newCurrency) {
-        showNotification(
-          `No puedes mezclar ${currentCurrency.toUpperCase()} con ${newCurrency.toUpperCase()}. Vacía tu carrito primero.`, 
-          'error'
-        );
-        return;
-      }
+  setCart(prev => {
+    const existingIndex = prev.findIndex(item => {
+      const sameId = item.uuid === product.uuid;
+      const sameVariant =
+        (item.selectedVariant?.uuid || null) ===
+        (variant?.uuid || null);
+
+      return sameId && sameVariant;
+    });
+
+    if (existingIndex !== -1) {
+      const newCart = [...prev];
+      newCart[existingIndex] = {
+        ...newCart[existingIndex],
+        quantity: newCart[existingIndex].quantity + qtyToAdd
+      };
+      return newCart;
     }
 
-    setCart(prev => {
-      const existing = prev.find(item => item.uuid === product.uuid);
-
-      if (existing) {
-        return prev.map(item =>
-          item.uuid === product.uuid
-            ? { ...item, quantity: item.quantity + qtyToAdd }
-            : item
-        );
-      }
-
-      return [...prev, {
+    return [
+      ...prev,
+      {
         uuid: product.uuid,
         name: product.name,
         price: product.price,
         currency: newCurrency,
-        image: product.images ? product.images.split(',')[0] : '',
+        image: product.images
+          ? product.images.split(',')[0]
+          : product.image || '',
         quantity: qtyToAdd,
         sku: product.sku,
-        category_id: product.category_id
-      }];
-    });
+        category_id: product.category_id,
+        selectedVariant: variant
+          ? {
+              uuid: variant.uuid,
+              variant_name: variant.variant_name
+            }
+          : undefined
+      }
+    ];
+  });
 
-    showNotification('Producto agregado al carrito', 'success');
-  };
+  showNotification('Agregado al carrito', 'success');
+};
 
-  const removeFromCart = (uuid: string) => {
-    setCart(prev => prev.filter(item => item.uuid !== uuid));
-  };
 
-  const updateQuantity = (uuid: string, delta: number) => {
-    setCart(prev => prev.map(item => {
-      if (item.uuid === uuid) {
+ const removeFromCart = (uuid: string, variantUuid?: string) => {
+  setCart(prev =>
+    prev.filter(item =>
+      !(
+        item.uuid === uuid &&
+        (item.selectedVariant?.uuid || null) === (variantUuid || null)
+      )
+    )
+  );
+};
+
+
+const updateQuantity = (uuid: string, delta: number, variantUuid?: string) => {
+  setCart(prev =>
+    prev.map(item => {
+      const sameProduct = item.uuid === uuid;
+      const sameVariant =
+        (item.selectedVariant?.uuid || null) === (variantUuid || null);
+
+      if (sameProduct && sameVariant) {
         const newQty = item.quantity + delta;
         return newQty > 0 ? { ...item, quantity: newQty } : item;
       }
+
       return item;
-    }));
-  };
+    })
+  );
+};
+
 
   const clearCart = () => {
     setCart([]);

@@ -1,8 +1,7 @@
-// src/shop/components/Checkout/AddressStep.tsx
 import React, { useState } from 'react';
-import { STORE_CONFIG } from '../../config';
+import { STORE_CONFIG } from '../../config'; 
 import { 
-  MapPin, 
+  MapPin,  
   User, 
   Mail, 
   Phone, 
@@ -142,8 +141,8 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
                       ? 'border-red-500 text-red-600 bg-red-50' 
                       : 'border-transparent focus:border-black'
                   }`}
-                  placeholder="00000"
-                  maxLength={5}
+                  placeholder="C.P."
+                  maxLength={10} 
                 />
                 {isLoadingColonias && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -153,14 +152,15 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
               </div>
             </div>
 
-            {/* Estado (Readonly) */}
+            {/* Estado (Editable) */}
             <div className="space-y-1">
               <label className="text-[10px] font-black text-gray-400 uppercase">Estado / Provincia</label>
               <input
                 type="text"
                 value={customerData.billing_address.state}
-                readOnly
-                className="w-full p-3 bg-gray-100 border-none rounded-xl text-gray-500 font-bold cursor-not-allowed"
+                onChange={(e) => updateBillingAddressField('state', e.target.value)}
+                className="w-full p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
+                placeholder="Estado"
               />
             </div>
 

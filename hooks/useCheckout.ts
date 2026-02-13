@@ -39,7 +39,7 @@ export const useCheckout = () => {
   const [shippingSameAsBilling, setShippingSameAsBilling] = useState(true);
   
   // 2. PAÍS SELECCIONADO
-  const [selectedCountry, setSelectedCountry] = useState<string>(STORE_CONFIG.country);
+  const [selectedCountry, setSelectedCountry] = useState<string>('');
   
   // Autocompletado de Colonias (API)
   const [colonias, setColonias] = useState<Array<{placeName: string, state: string}>>([]);
@@ -62,7 +62,7 @@ export const useCheckout = () => {
       city: '',
       state: '',
       postal_code: '',
-      country: STORE_CONFIG.country, // Fijo desde config
+      country: '', // Fijo desde config
       references: ''
     },
     company_name: '',
@@ -111,7 +111,7 @@ export const useCheckout = () => {
     setIsLoadingColonias(true);
     try {
       // Usamos el país configurado en la tienda (ej: 'mx')
-      const countryCode = STORE_CONFIG.country.toLowerCase();
+      const countryCode = selectedCountry.toLowerCase();
       const url = `https://api.zippopotam.us/${countryCode}/${postalCode}`;
       
       const response = await fetch(url);
@@ -135,7 +135,8 @@ export const useCheckout = () => {
             neighborhood: first.placeName,
             city: first.placeName.split(',')[0], 
             state: first.state,
-            postal_code: postalCode
+            postal_code: postalCode,
+            country:selectedCountry
           }
         }));
       }
@@ -160,7 +161,7 @@ export const useCheckout = () => {
     
     setCustomerData(prev => ({
       ...prev,
-      billing_address: { ...prev.billing_address, postal_code: cleanPostal }
+      billing_address: { ...prev.billing_address, postal_code: cleanPostal, country: selectedCountry }
     }));
     
     // Debounce de 800ms para no saturar la API
@@ -177,7 +178,8 @@ export const useCheckout = () => {
         ...prev.billing_address,
         neighborhood: colonia.placeName,
         city: colonia.placeName.split(',')[0],
-        state: colonia.state
+        state: colonia.state,
+        country: selectedCountry
       }
     }));
   };
@@ -203,7 +205,7 @@ export const useCheckout = () => {
     } else {
       setCustomerData(prev => ({
         ...prev,
-        shipping_address: { ...prev.billing_address }
+        shipping_address: { ...prev.billing_address, country:selectedCountry }
       }));
     }
   };
