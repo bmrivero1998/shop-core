@@ -171,3 +171,4 @@ export const CheckoutPage = () => {
   );
 };
 
+export default CheckoutPage;

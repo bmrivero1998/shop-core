@@ -474,3 +474,5 @@ export const StorePage = () => {
     </div>
   );
 };
+
+export default StorePage;
