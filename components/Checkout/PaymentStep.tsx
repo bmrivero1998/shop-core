@@ -7,7 +7,9 @@ import { useCart } from '../../CartContext'; // Importamos el contexto del carri
 import type { ProjectConfig } from '../../interfaces/config.interface';
 
 // Carga de Stripe
-const stripePromise = loadStripe(STORE_CONFIG.STRIPE_PUBLIC_KEY);
+const stripePromise = STORE_CONFIG.STRIPE_ACCOUNT_ID 
+  ? loadStripe(STORE_CONFIG.STRIPE_PUBLIC_KEY, { stripeAccount: STORE_CONFIG.STRIPE_ACCOUNT_ID })
+  : loadStripe(STORE_CONFIG.STRIPE_PUBLIC_KEY);
 
 interface PaymentStepProps {
   customerData:any;
