@@ -59,7 +59,7 @@ export const STORE_CONFIG = {
   
   // Llave Pública de Stripe
   STRIPE_PUBLIC_KEY: 'pk_test_51Rjrn9Q7rhLBuE2WtlgmxYdM1qYMuku9y7fNTBq5VblSsqzxOJyxeCVrByrnJkzYGbtTUFnlV3JjcaEn3657hm6000X2SBZZ4O',
-  
+  STRIPE_ACCOUNT_ID: 'acct_...', // Solo si usas Connect
   // 1. Identidad y Contacto
   storeName: "Gazel Shop", 
   whatsappNumber: "50688887777", // Número de soporte completo
