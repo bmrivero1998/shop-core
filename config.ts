@@ -53,7 +53,7 @@ export const STORE_CONFIG = {
   
   // Llave Pública de Stripe
   STRIPE_PUBLIC_KEY: 'pk_test_51Rjrn9Q7rhLBuE2WtlgmxYdM1qYMuku9y7fNTBq5VblSsqzxOJyxeCVrByrnJkzYGbtTUFnlV3JjcaEn3657hm6000X2SBZZ4O',
-  
+  STRIPE_ACCOUNT_ID: 'acct_1SueuhQ7rhbnDgY2', // Solo si usas Connect
   // 1. Identidad y Contacto
   storeName: "Martin Riper Shop", 
   whatsappNumber: "525656398738", // Número de soporte completo
