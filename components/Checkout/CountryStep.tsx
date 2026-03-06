@@ -51,7 +51,7 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
           <select
             value={selectedCountry || ''}
             onChange={(e) => setSelectedCountry(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-black rounded-2xl appearance-none font-bold transition outline-none"
+            className="w-full pl-12 pr-4 py-4 bg-gray-50 text-black border-2 border-transparent focus:border-black rounded-2xl appearance-none font-bold transition outline-none"
           >
             <option value="" disabled>
               🌍 Selecciona tu país

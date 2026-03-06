@@ -83,7 +83,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
               type="text"
               value={customerData.name}
               onChange={(e) => updateCustomerData('name', e.target.value)}
-              className="w-full p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
+              className="w-full p-3 bg-gray-50 text-black border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
               placeholder="Ej. Juan Pérez"
             />
           </div>
@@ -95,7 +95,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
                 type="tel"
                 value={customerData.phone}
                 onChange={(e) => updateCustomerData('phone', e.target.value.replace(/\D/g, '').slice(0, 10))}
-                className="w-full pl-10 pr-3 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
+                className="w-full pl-10 pr-3 py-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
                 placeholder="10 dígitos"
               />
             </div>
@@ -108,7 +108,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
                 type="email"
                 value={customerData.email}
                 onChange={(e) => updateCustomerData('email', e.target.value)}
-                className="w-full pl-10 pr-3 py-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
+                className="w-full pl-10 pr-3 py-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
                 placeholder="ejemplo@correo.com"
               />
             </div>
@@ -136,7 +136,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
                   type="text"
                   value={customerData.billing_address.postal_code}
                   onChange={(e) => handlePostalCodeChange(e.target.value)}
-                  className={`w-full p-3 bg-gray-50 border-2 rounded-xl focus:ring-0 transition font-mono font-bold tracking-widest ${
+                  className={`w-full p-3 bg-gray-50 text-black border-2 rounded-xl focus:ring-0 transition font-mono font-bold tracking-widest ${
                     !isShippingAvailable && customerData.billing_address.postal_code.length >= 4 
                       ? 'border-red-500 text-red-600 bg-red-50' 
                       : 'border-transparent focus:border-black'
@@ -159,7 +159,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
                 type="text"
                 value={customerData.billing_address.state}
                 onChange={(e) => updateBillingAddressField('state', e.target.value)}
-                className="w-full p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
+                className="w-full p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
                 placeholder="Estado"
               />
             </div>
@@ -174,7 +174,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
                     const selected = colonias.find(c => c.placeName === e.target.value);
                     if (selected) handleColoniaSelect(selected);
                   }}
-                  className="w-full p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition appearance-none font-medium"
+                  className="w-full p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition appearance-none font-medium"
                 >
                   <option value="">Selecciona tu colonia...</option>
                   {colonias.map((c, idx) => (
@@ -186,7 +186,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
                   type="text"
                   value={customerData.billing_address.neighborhood}
                   onChange={(e) => updateBillingAddressField('neighborhood', e.target.value)}
-                  className="w-full p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
+                  className="w-full p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
                   placeholder="Escribe tu colonia..."
                 />
               )}
@@ -201,21 +201,21 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
                   placeholder="Calle"
                   value={customerData.billing_address.street}
                   onChange={(e) => updateBillingAddressField('street', e.target.value)}
-                  className="flex-[3] p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
+                  className="flex-[3] p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
                 />
                 <input
                   type="text"
                   placeholder="No. Ext"
                   value={customerData.billing_address.number_ext}
                   onChange={(e) => updateBillingAddressField('number_ext', e.target.value)}
-                  className="flex-1 p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
+                  className="flex-1 p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
                 />
                 <input
                   type="text"
                   placeholder="Int (Op)"
                   value={customerData.billing_address.number_int}
                   onChange={(e) => updateBillingAddressField('number_int', e.target.value)}
-                  className="flex-1 p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
+                  className="flex-1 p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
                 />
               </div>
             </div>
@@ -227,7 +227,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
                 type="text"
                 value={customerData.billing_address.references}
                 onChange={(e) => updateBillingAddressField('references', e.target.value)}
-                className="w-full p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
+                className="w-full p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
                 placeholder="Entre calles, color de fachada, portón, etc."
               />
             </div>
@@ -241,7 +241,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
                 type="text"
                 value={customerData.tax_id || ''}
                 onChange={(e) => updateCustomerData('tax_id', e.target.value.toUpperCase())}
-                className="w-full p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-mono uppercase"
+                className="w-full p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-mono uppercase"
                 placeholder="XAXX010101000"
               />
             </div>
