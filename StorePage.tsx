@@ -22,6 +22,14 @@ import { ALL_CATEGORIES, type Category } from './data/category';
 // --- CONSTANTES DE TEMA ---
 const { colors, ui } = STORE_CONFIG.theme;
 
+const theme = {
+  bg:        { backgroundColor: STORE_CONFIG.theme.colors.background },
+  primary:   { color: STORE_CONFIG.theme.colors.primary },
+  accent:    { color: STORE_CONFIG.theme.colors.accent },
+  accentBg:  { backgroundColor: STORE_CONFIG.theme.colors.accent },
+  primaryBg: { backgroundColor: STORE_CONFIG.theme.colors.primary },
+} as const;
+
 // --- TIPOS ---
 export interface Variants {
     uuid:           string;
@@ -123,9 +131,9 @@ const ProductModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-end md:items-center justify-center sm:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[200] flex items-end md:items-center justify-center md:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className="bg-white w-full h-[90vh] md:h-auto md:max-h-[85vh] md:rounded-[2rem] rounded-t-[2rem] md:max-w-5xl shadow-2xl flex flex-col md:flex-row relative overflow-hidden"
+        className="bg-white w-full h-[92vh] md:h-auto md:max-h-[90vh] rounded-t-[2rem] md:rounded-[2rem] md:max-w-4xl shadow-2xl flex flex-col md:flex-row relative overflow-hidden"
         style={{ borderRadius: ui.borderRadius }}
       >
         <button
@@ -136,8 +144,8 @@ const ProductModal = ({
         </button>
 
         {/* IMAGEN */}
-        <div className="w-full h-[35vh] md:w-1/2 md:h-auto bg-gray-50 flex items-center justify-center p-6 relative shrink-0">
-          <div className="relative w-full h-full max-h-[400px] flex items-center justify-center">
+        <div className="w-full h-[38vw] min-h-[200px] max-h-[280px] md:w-[45%] md:h-auto md:max-h-none bg-gray-50 flex items-center justify-center p-4 md:p-6 relative shrink-0">
+          <div className="relative w-full h-full flex items-center justify-center">
             <img
               src={mainImage}
               alt={product.name}
@@ -154,7 +162,7 @@ const ProductModal = ({
                   }
                   className="absolute left-0 bg-white/90 p-2 rounded-full shadow-lg hover:scale-110 transition"
                 >
-                  <ChevronLeft size={20} />
+                  <ChevronLeft size={20}  style={theme.accent} />
                 </button>
 
                 <button
@@ -165,7 +173,7 @@ const ProductModal = ({
                   }
                   className="absolute right-0 bg-white/90 p-2 rounded-full shadow-lg hover:scale-110 transition"
                 >
-                  <ChevronRight size={20} />
+                  <ChevronRight size={20}  style={theme.accent} />
                 </button>
               </>
             )}
@@ -173,35 +181,35 @@ const ProductModal = ({
         </div>
 
         {/* INFO */}
-        <div className="w-full h-full md:w-1/2 flex flex-col bg-white overflow-hidden">
-          <div className="flex-1 overflow-y-auto p-6 md:p-10">
-            <span className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">
+        <div className="w-full flex-1 md:w-[55%] flex flex-col bg-white overflow-hidden min-h-0">
+          <div className="flex-1 overflow-y-auto p-5 md:p-8">
+            <span className="text-xs font-black uppercase tracking-[0.2em]" style={theme.primary}>
               {category?.name || 'General'}
             </span>
 
             <h2
-              className="text-3xl font-black uppercase italic tracking-tighter mb-4 mt-2 leading-none"
-              style={{ fontFamily: ui.fontFamily }}
+              className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter mb-3 mt-2 leading-none"
+              style={{ fontFamily: ui.fontFamily, ...theme.primary }}
             >
               {product.name}
             </h2>
 
-            <div className="flex items-baseline gap-2 mb-6 pb-6 border-b border-gray-100">
+            <div className="flex items-baseline gap-2 mb-5 pb-5 border-b border-gray-100">
               <span
-                className="text-4xl font-black"
-                style={{ color: colors.accent }}
+                className="text-3xl md:text-4xl font-black"
+                style={theme.accent}
               >
                 ${(finalPrice / 100).toFixed(2)}
               </span>
-              <span className="text-xs font-bold text-gray-400 uppercase">
+              <span className="text-xs font-bold uppercase" style={theme.primary}>
                 {product.currency}
               </span>
             </div>
 
             {/* 🔥 VARIANTES SIMPLES */}
             {hasVariants && (
-              <div className="space-y-5 mb-6">
-                <p className="text-[10px] font-black uppercase text-gray-400 mb-2 tracking-widest">
+              <div className="space-y-3 mb-5">
+                <p className="text-[10px] font-black uppercase mb-2 tracking-widest" style={theme.primary}>
                   Variante
                 </p>
 
@@ -216,8 +224,9 @@ const ProductModal = ({
                         selectedVariant?.uuid ===
                         variant.uuid
                           ? 'text-white border-black bg-black'
-                          : 'bg-white text-gray-600 border-gray-100 hover:border-gray-300'
+                          : 'bg-white border-gray-100 hover:border-gray-300'
                       }`}
+                      style={selectedVariant?.uuid === variant.uuid ? undefined : theme.primary}
                     >
                       {variant.variant_name}
                     </button>
@@ -227,7 +236,7 @@ const ProductModal = ({
             )}
 
             {isFashion && (
-              <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-xl mb-6 flex gap-3">
+              <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-xl mb-5 flex gap-3">
                 <Info className="text-amber-500 w-5 h-5 flex-shrink-0" />
                 <p className="text-xs text-amber-900 font-bold leading-relaxed">
                   Importante: Confirmaremos tu talla exacta por WhatsApp al finalizar el pedido.
@@ -236,16 +245,16 @@ const ProductModal = ({
             )}
 
             {product.description && (
-              <div className="prose prose-sm text-gray-500 text-sm leading-relaxed">
-                <p>{product.description}</p>
+              <div className="prose prose-sm text-sm leading-relaxed">
+                <p style={theme.primary}>{product.description}</p>
               </div>
             )}
           </div>
 
           {/* CONTROLES */}
-          <div className="p-6 border-t bg-white z-10 space-y-4 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
+          <div className="p-5 md:p-6 border-t bg-white z-10 space-y-3 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-xs uppercase text-gray-400 tracking-widest">
+              <span className="font-bold text-xs uppercase tracking-widest" style={theme.primary}>
                 Cantidad
               </span>
 
@@ -256,10 +265,10 @@ const ProductModal = ({
                   }
                   className="p-2.5 hover:bg-white rounded-lg transition shadow-sm"
                 >
-                  <Minus size={14} />
+                  <Minus size={14} style={theme.accent} />
                 </button>
 
-                <span className="w-10 text-center font-black text-sm">
+                <span className="w-10 text-center font-black text-sm" style={theme.primary}>
                   {qty}
                 </span>
 
@@ -269,7 +278,7 @@ const ProductModal = ({
                   }
                   className="p-2.5 hover:bg-white rounded-lg transition shadow-sm"
                 >
-                  <Plus size={14} />
+                  <Plus size={14} style={theme.accent} />
                 </button>
               </div>
             </div>
@@ -284,12 +293,11 @@ const ProductModal = ({
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none'
                   : 'text-white'
               }`}
-              style={{
-                backgroundColor:
-                  currencyMismatch || !isAllSelected
-                    ? undefined
-                    : colors.accent
-              }}
+              style={
+                currencyMismatch || !isAllSelected
+                  ? undefined
+                  : theme.accentBg
+              }
             >
               <ShoppingBag size={18} />
               {hasVariants && !selectedVariant
@@ -315,7 +323,7 @@ const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Produc
         style={{ borderRadius: ui.borderRadius }}
     >
       <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
-        <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 text-[9px] font-black uppercase tracking-widest z-10 rounded-md shadow-sm">
+        <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 text-[9px] font-black uppercase tracking-widest z-10 rounded-md shadow-sm" style={theme.primary}>
             {ALL_CATEGORIES.find(c => c.id === product.category_id)?.name || 'General'}
         </span>
         <img src={mainImg} alt={product.name} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" />
@@ -329,12 +337,12 @@ const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Produc
       </div>
 
       <div className="p-4 flex flex-col flex-grow">
-        <h3 className="font-bold text-sm uppercase tracking-tight leading-snug line-clamp-2 mb-3 group-hover:text-gray-600 transition-colors">
+        <h3 className="font-bold text-sm uppercase tracking-tight leading-snug line-clamp-2 mb-3 transition-colors" style={theme.primary}>
             {product.name}
         </h3>
         <div className="mt-auto flex items-center justify-between border-t border-gray-50 pt-3">
-          <span className="font-black text-lg" style={{ color: colors.accent }}>${(product.price/100).toFixed(2)}</span>
-          <span className="text-[10px] font-bold bg-gray-100 px-2 py-1 rounded text-gray-500 uppercase">{product.currency}</span>
+          <span className="font-black text-lg" style={theme.accent}>${(product.price/100).toFixed(2)}</span>
+          <span className="text-[10px] font-bold bg-gray-100 px-2 py-1 rounded uppercase" style={theme.primary}>{product.currency}</span>
         </div>
       </div>
     </div>
@@ -374,14 +382,14 @@ export const StorePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] font-sans pb-24 relative"> 
+    <div className="min-h-screen bg-[#FAFAFA] font-sans pt-28 pb-24 relative" style={theme.bg}> 
       
       {/* 1. TOP HEADER (Nombre Tienda) */}
       <nav 
         className="bg-white/80 backdrop-blur-xl border-b sticky top-0 px-4 md:px-8 h-16 flex items-center justify-between"
         style={{ borderColor: 'rgba(0,0,0,0.05)' }}
       >
-        <h1 className="font-black text-xl tracking-tighter italic uppercase text-black">
+        <h1 className="font-black text-xl tracking-tighter italic uppercase" style={theme.primary}>
           {STORE_CONFIG.storeName}
         </h1>
       </nav>
@@ -392,15 +400,18 @@ export const StorePage = () => {
           
           {/* Input Búsqueda */}
           <div className="relative w-full md:max-w-md group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black transition-colors" size={16} />
-            <input 
-              type="text" 
-              placeholder="Buscar producto..." 
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-full bg-gray-100 hover:bg-gray-50 focus:bg-white border-transparent focus:border-black border rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium transition-all outline-none"
-            />
-          </div>
+  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black transition-colors" size={16} />
+  <input 
+    type="text" 
+    placeholder="Buscar producto..." 
+    value={search}
+    onChange={e => setSearch(e.target.value)}
+    className="w-full bg-gray-100 hover:bg-gray-50 focus:bg-white border-2 border-transparent rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium transition-all outline-none text-black"
+    style={{ '--tw-border-opacity': '1' } as React.CSSProperties}
+    onFocus={e => e.currentTarget.style.borderColor = colors.accent}
+    onBlur={e => e.currentTarget.style.borderColor = 'transparent'}
+  />
+</div>
 
           {/* Selector de Categorías (Estilo Custom) */}
           <div className="relative w-full md:w-64 shrink-0">
@@ -438,9 +449,9 @@ export const StorePage = () => {
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 opacity-40">
             <ShoppingBag className="text-gray-400 mb-4" size={64} strokeWidth={1} />
-            <h3 className="text-lg font-black uppercase tracking-widest text-gray-500">Sin resultados</h3>
-            <p className="text-sm text-gray-400 mt-2">Intenta ajustar tu búsqueda o categoría.</p>
-            <button onClick={() => { setSearch(''); setSelectedCat('all'); }} className="mt-6 text-xs font-bold underline">Limpiar filtros</button>
+            <h3 className="text-lg font-black uppercase tracking-widest" style={theme.primary}>Sin resultados</h3>
+            <p className="text-sm mt-2" style={theme.primary}>Intenta ajustar tu búsqueda o categoría.</p>
+            <button onClick={() => { setSearch(''); setSelectedCat('all'); }} className="mt-6 text-xs font-bold underline" style={theme.primary}>Limpiar filtros</button>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
@@ -453,7 +464,7 @@ export const StorePage = () => {
       <button 
         onClick={() => setIsOpen(true)} 
         className="fixed bottom-8 right-8 z-[30] text-white w-16 h-16 rounded-[20px] shadow-2xl shadow-black/20 hover:scale-110 active:scale-95 transition-all flex items-center justify-center border-4 border-white group"
-        style={{ backgroundColor: colors.accent }}
+        style={theme.accentBg}
       >
         <ShoppingCart size={26} className="group-hover:rotate-12 transition-transform" />
         {totalItems > 0 && (

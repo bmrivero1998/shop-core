@@ -52,7 +52,7 @@ export const STORE_CONFIG = {
   isStoreOpen: true,
 
   // Project UUID
-  PROJECT_UUID: '88dffc4c-3767-45ff-9af7-9f787fb063dc',
+  PROJECT_UUID: '254a0c48-7f00-4f62-bcc1-b0febed2965e',
   
   // Tu API URL
   API_URL: 'https://metritrak-workers.kripto-bmrp.workers.dev/v1',
@@ -61,28 +61,28 @@ export const STORE_CONFIG = {
   STRIPE_PUBLIC_KEY: 'pk_test_51Rjrn9Q7rhLBuE2WtlgmxYdM1qYMuku9y7fNTBq5VblSsqzxOJyxeCVrByrnJkzYGbtTUFnlV3JjcaEn3657hm6000X2SBZZ4O',
   STRIPE_ACCOUNT_ID: 'acct_...', // Solo si usas Connect
   // 1. Identidad y Contacto
-  storeName: "Gazel Shop", 
+  storeName: "Hadadanza Shop", 
   whatsappNumber: "50688887777", // Número de soporte completo
-  country: 'CR' as keyof typeof SUPPORTED_COUNTRIES, // Seteado a Costa Rica
+  country: 'ES' as keyof typeof SUPPORTED_COUNTRIES, // Seteado a España
   
   // 2. Lógica de Negocio
   mode: 'shop' as 'shop' | 'catalog', 
   businessType: 'physical' as 'physical' | 'service', 
-  rawWhatsApp: '88887777', // Número local de CR (sin el 506)
+  rawWhatsApp: '00000000', // Número local sin código de país para mensajes predefinidos (ej: "Contáctame por WhatsApp")
 
   // 3. Restricciones Geográficas (Local-First)
   location: {
-    defaultCountry: 'CR', // País base
-    allowedZipCodes: [] as string[], // Vacío permite todo Costa Rica (CPs de 5 dígitos)
+    defaultCountry: 'ES', // País base
+    allowedZipCodes: [] as string[], // Vacío permite todo España (CPs de 5 dígitos)
   },
 
   // 4. Configuración Visual (Tema)
   theme: {
     colors: {
-      primary: '#ececec',
-      accent: '#e40606',
-      background: '#000000',
-      text: '#fdfdff'
+      primary: '#1a1a1a',
+      accent: '#ff5a1f',
+      background: '#0b0b0b',
+      text: '#000000'
     },
     ui: {
       borderRadius: '12px', // Un poco más redondeado para look moderno
@@ -95,11 +95,11 @@ export const STORE_CONFIG = {
     addToCart: "Agregar al carrito",
     outOfStock: "Agotado",
     buyNow: "Comprar ahora",
-    shippingNote: "Envío calculado para Costa Rica. Internacional vía WhatsApp.",
+    shippingNote: "Envío calculado para España y algunos paises de Latinoamérica.",
   },
 
   /**
-   * Genera el link de WhatsApp con el dialCode de Costa Rica (506)
+   * Genera el link de WhatsApp con el dialCode de España (34) y el número local (rawWhatsApp). Esto se usa para los botones de contacto predefinidos.
    */
   get fullWhatsApp() {
     const info = SUPPORTED_COUNTRIES[this.country];
