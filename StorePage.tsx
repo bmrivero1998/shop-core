@@ -382,14 +382,14 @@ export const StorePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] font-sans pt-28 pb-24 relative" style={theme.bg}> 
+    <div className="min-h-screen bg-[#FAFAFA] font-sans pb-24 relative" style={theme.bg}> 
       
       {/* 1. TOP HEADER (Nombre Tienda) */}
       <nav 
         className="bg-white/80 backdrop-blur-xl border-b sticky top-0 px-4 md:px-8 h-16 flex items-center justify-between"
         style={{ borderColor: 'rgba(0,0,0,0.05)' }}
       >
-        <h1 className="font-black text-xl tracking-tighter italic uppercase" style={theme.primary}>
+        <h1 className="font-black text-xl tracking-tighter italic uppercase" style={theme.accent}>
           {STORE_CONFIG.storeName}
         </h1>
       </nav>
