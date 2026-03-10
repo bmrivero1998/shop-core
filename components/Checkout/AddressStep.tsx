@@ -67,7 +67,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
   };
 
   return (
-    <form onSubmit={validateAndContinue} className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <form onSubmit={validateAndContinue} className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full overflow-hidden">
       
       {/* SECCIÓN 1: DATOS DE CONTACTO */}
       <section className="space-y-4">
@@ -76,8 +76,8 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
           <h3 className="font-black text-lg uppercase tracking-tight">Datos de Contacto</h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 min-w-0">
+          <div className="space-y-1 min-w-0">
             <label className="text-[10px] font-black text-gray-400 uppercase">Nombre Completo</label>
             <input
               type="text"
@@ -87,7 +87,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
               placeholder="Ej. Juan Pérez"
             />
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1 min-w-0">
             <label className="text-[10px] font-black text-gray-400 uppercase">Teléfono (WhatsApp)</label>
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
@@ -100,7 +100,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
               />
             </div>
           </div>
-          <div className="space-y-1 md:col-span-2">
+          <div className="space-y-1 md:col-span-2 min-w-0">
             <label className="text-[10px] font-black text-gray-400 uppercase">Correo Electrónico</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
@@ -126,10 +126,10 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 min-w-0">
             
             {/* Código Postal (Trigger de Lógica) */}
-            <div className="space-y-1">
+            <div className="space-y-1 min-w-0">
               <label className="text-[10px] font-black text-gray-400 uppercase">Código Postal</label>
               <div className="relative">
                 <input
@@ -153,7 +153,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
             </div>
 
             {/* Estado (Editable) */}
-            <div className="space-y-1">
+            <div className="space-y-1 min-w-0">
               <label className="text-[10px] font-black text-gray-400 uppercase">Estado / Provincia</label>
               <input
                 type="text"
@@ -165,7 +165,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
             </div>
 
             {/* Colonia (Select Automático) */}
-            <div className="space-y-1 md:col-span-2">
+            <div className="space-y-1 md:col-span-2 min-w-0">
               <label className="text-[10px] font-black text-gray-400 uppercase">Colonia / Asentamiento</label>
               {colonias.length > 0 ? (
                 <select
@@ -193,35 +193,35 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
             </div>
 
             {/* Calle y Números */}
-            <div className="space-y-1 md:col-span-2">
+            <div className="space-y-1 md:col-span-2 min-w-0">
               <label className="text-[10px] font-black text-gray-400 uppercase">Calle y Número</label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 min-w-0">
                 <input
                   type="text"
                   placeholder="Calle"
                   value={customerData.billing_address.street}
                   onChange={(e) => updateBillingAddressField('street', e.target.value)}
-                  className="flex-[3] p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
+                  className="flex-[3] min-w-0 p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
                 />
                 <input
                   type="text"
                   placeholder="No. Ext"
                   value={customerData.billing_address.number_ext}
                   onChange={(e) => updateBillingAddressField('number_ext', e.target.value)}
-                  className="flex-1 p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
+                  className="flex-1 min-w-0 p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
                 />
                 <input
                   type="text"
                   placeholder="Int (Op)"
                   value={customerData.billing_address.number_int}
                   onChange={(e) => updateBillingAddressField('number_int', e.target.value)}
-                  className="flex-1 p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
+                  className="flex-1 min-w-0 p-3 text-black bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-black transition font-medium"
                 />
               </div>
             </div>
 
             {/* Referencias */}
-            <div className="space-y-1 md:col-span-2">
+            <div className="space-y-1 md:col-span-2 min-w-0">
               <label className="text-[10px] font-black text-gray-400 uppercase">Referencias de entrega</label>
               <input
                 type="text"
@@ -233,7 +233,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
             </div>
 
             {/* RFC / Tax ID (Opcional) */}
-            <div className="space-y-1 md:col-span-2 mt-2 pt-4 border-t border-dashed">
+            <div className="space-y-1 md:col-span-2 mt-2 pt-4 border-t border-dashed min-w-0">
               <label className="text-[10px] font-black text-gray-400 uppercase flex items-center gap-1">
                 <FileText size={12}/> RFC / Tax ID (Opcional)
               </label>
