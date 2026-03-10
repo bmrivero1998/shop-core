@@ -302,6 +302,7 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
       {/* BOTÓN CONTINUAR */}
       <button
         type="submit"
+        id={`btn_tracking_tier_shopytrak_checkout_address`}
         disabled={isPhysical && !isShippingAvailable}
         className={`w-full py-4 rounded-2xl font-black text-white flex items-center justify-center gap-3 transition shadow-xl ${
           (isPhysical && !isShippingAvailable)

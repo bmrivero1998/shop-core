@@ -287,6 +287,7 @@ const ProductModal = ({
               disabled={
                 currencyMismatch || !isAllSelected
               }
+              id={`btn_tracking_addtocart_${product.uuid}`}
               onClick={handleAddToCart}
               className={`w-full py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition flex items-center justify-center gap-3 shadow-xl hover:scale-[1.02] active:scale-[0.98] ${
                 currencyMismatch || !isAllSelected
@@ -318,6 +319,7 @@ const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Produc
   
   return (
     <div 
+        id={`btn_tracking_product_${product.uuid}`}
         onClick={() => onOpen(product)} 
         className="group bg-white overflow-hidden cursor-pointer border border-transparent hover:border-gray-200 hover:shadow-2xl hover:shadow-black/5 transition-all duration-300 flex flex-col h-full relative"
         style={{ borderRadius: ui.borderRadius }}
@@ -462,6 +464,7 @@ export const StorePage = () => {
 
       {/* 4. BOTÓN FLOTANTE DEL CARRITO */}
       <button 
+        id="btn_tracking_cart_open"
         onClick={() => setIsOpen(true)} 
         className="fixed bottom-8 right-8 z-[30] text-white w-16 h-16 rounded-[20px] shadow-2xl shadow-black/20 hover:scale-110 active:scale-95 transition-all flex items-center justify-center border-4 border-white group"
         style={theme.accentBg}

@@ -88,6 +88,7 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
 
             <button
               onClick={handleWhatsAppQuote}
+              id={`btn_tracking_shopytrak_country_whatsapp_${selectedCountry}`}
               className="w-full py-4 bg-[#25D366] text-white font-black rounded-xl hover:shadow-lg transition flex items-center justify-center gap-2"
             >
               <MessageCircle size={20} /> Cotizar por WhatsApp
@@ -108,6 +109,7 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
               {/* --- 3. USAMOS LA FUNCIÓN AQUÍ --- */}
               <button
                 onClick={handleContinue}
+                id={`btn_tracking_shopytrak_country_continue_${selectedCountry}`}
                 className="w-full py-4 bg-black text-white font-black rounded-2xl hover:bg-gray-800 transition flex items-center justify-center gap-2 shadow-xl"
               >
                 Continuar con la dirección <ArrowRight size={20} />
