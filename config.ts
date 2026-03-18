@@ -14,13 +14,13 @@
  * Define el nombre, la bandera (emoji) y el código de marcación telefónica principal.
  */
 export const SUPPORTED_COUNTRIES = {
-  MX: { name: 'México', flag: '🇲🇽', dialCode: '52' },
+// MX: { name: 'México', flag: '🇲🇽', dialCode: '52' },
   CR: { name: 'Costa Rica', flag: '🇨🇷', dialCode: '506' },
-  CO: { name: 'Colombia', flag: '🇨🇴', dialCode: '57' },
-  PE: { name: 'Perú', flag: '🇵🇪', dialCode: '51' },
-  CL: { name: 'Chile', flag: '🇨🇱', dialCode: '56' },
-  ES: { name: 'España', flag: '🇪🇸', dialCode: '34' },
-  US: { name: 'Estados Unidos', flag: '🇺🇸', dialCode: '1' },
+//  CO: { name: 'Colombia', flag: '🇨🇴', dialCode: '57' },
+//  PE: { name: 'Perú', flag: '🇵🇪', dialCode: '51' },
+//  CL: { name: 'Chile', flag: '🇨🇱', dialCode: '56' },
+//  ES: { name: 'España', flag: '🇪🇸', dialCode: '34' },
+//  US: { name: 'Estados Unidos', flag: '🇺🇸', dialCode: '1' },
 };
 
 export const LOCALE_CURRENCY_MAP: Record<string, string> = {
@@ -90,7 +90,7 @@ export const STORE_CONFIG = {
   isStoreOpen: true,
 
   // Project UUID
-  PROJECT_UUID: '',
+  PROJECT_UUID: '88dffc4c-3767-45ff-9af7-9f787fb063dc',
   
   // Tu API URL
   API_URL: 'https://metritrak-workers.kripto-bmrp.workers.dev/v1',
@@ -98,19 +98,20 @@ export const STORE_CONFIG = {
   // 1. CREDENCIALES DE PASARELAS (Públicas)
   // ¡ADVERTENCIA!: Nunca coloques llaves secretas (Secret Keys) aquí.
   // -------------------------------------------------------------------------
-  STRIPE_PUBLIC_KEY: 'pk_test_tu_llave_publica_de_stripe_aqui',
-  STRIPE_ACCOUNT_ID: '', // Solo usar si se implementa Stripe Connect (Ej. 'acct_123456')
+  STRIPE_PUBLIC_KEY: 'pk_test_51Rjrn9Q7rhLBuE2WtlgmxYdM1qYMuku9y7fNTBq5VblSsqzxOJyxeCVrByrnJkzYGbtTUFnlV3JjcaEn3657hm6000X2SBZZ4O',
+  
+  STRIPE_ACCOUNT_ID: 'acct_1SueuhQ7rhbnDgY2', // Solo usar si se implementa Stripe Connect (Ej. 'acct_123456')
   PAYPAL_CLIENT_ID: 'tu_client_id_publico_de_paypal_aqui',
   MERCADO_PAGO_PUBLIC_KEY: 'TEST-tu_public_key_de_mercado_pago_aqui',
 
   // -------------------------------------------------------------------------
   // 2. IDENTIDAD Y CONTACTO
   // -------------------------------------------------------------------------
-  storeName: "Nombre de tu Tienda", 
+  storeName: "Gazel Shop", 
   whatsappNumber: "50688887777", // Número COMPLETO (Código país + número) para redirección de WhatsApp
   country: 'CR' as keyof typeof SUPPORTED_COUNTRIES, // País principal de operaciones
-  locale: 'es-CR' as keyof typeof LOCALE_CURRENCY_MAP, // Código de localización (Afecta formato de moneda, fechas y SDKs de pago)
-  provider: 'paypal' as 'stripe' | 'paypal' | 'mercadopago', // Pasarela de pago principal a usar en el checkout
+  locale: 'es-US' as keyof typeof LOCALE_CURRENCY_MAP, // Código de localización (Afecta formato de moneda, fechas y SDKs de pago)
+  provider: 'stripe' as 'stripe' | 'paypal' | 'mercadopago', // Pasarela de pago principal a usar en el checkout
   // -------------------------------------------------------------------------
   // 3. LÓGICA DE NEGOCIO (Controladores de comportamiento)
   // -------------------------------------------------------------------------
