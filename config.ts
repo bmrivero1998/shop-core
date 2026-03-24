@@ -52,8 +52,8 @@ export const STORE_CONFIG = {
   API_URL: 'https://metritrak-workers.kripto-bmrp.workers.dev/v1',
   
   // Llave Pública de Stripe
-  STRIPE_PUBLIC_KEY: 'pk_test_51Rjrn9Q7rhLBuE2WtlgmxYdM1qYMuku9y7fNTBq5VblSsqzxOJyxeCVrByrnJkzYGbtTUFnlV3JjcaEn3657hm6000X2SBZZ4O',
-  STRIPE_ACCOUNT_ID: 'acct_1SueuhQ7rhbnDgY2', // Solo si usas Connect
+  STRIPE_PUBLIC_KEY: 'pk_live_51Rjrm1Llq8dRY3gU3hr6InTOsEvhoKdySXQp5Mx1duUZBRoFK9DkhTw1OGQTTIaNi0rYsvtUkhunpU4QVKypQu1v00uCU3SVUV',
+  STRIPE_ACCOUNT_ID: 'acct_1TEOWZQ92gRrxpNm', // Solo si usas Connect
   // 1. Identidad y Contacto
   storeName: "Martin Riper Shop", 
   whatsappNumber: "525656398738", // Número de soporte completo
@@ -89,7 +89,7 @@ export const STORE_CONFIG = {
     addToCart: "Agregar al carrito",
     outOfStock: "Agotado",
     buyNow: "Comprar ahora",
-    shippingNote: "Envío calculado para Costa Rica. Internacional vía WhatsApp.",
+    shippingNote: "Envío calculado para Mexico. Envios gratis a partir de 1499 mxn.",
   },
 
   /**
