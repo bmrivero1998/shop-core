@@ -18,15 +18,10 @@ import {
   Loader2
 } from 'lucide-react';
 import { ALL_CATEGORIES, type Category } from './data/category';
+import { createPortal } from 'react-dom';
 
 // --- CONSTANTES DE TEMA ---
-const colors = {
-  primary: '#ececec',
-  accent: '#e40606',
-  background: '#ffffff',
-  text: '#000000',
-};
-
+const colors = STORE_CONFIG.theme.colors;
 const ui = {
   borderRadius: '12px',
   fontFamily: "'Inter', sans-serif",
@@ -78,24 +73,27 @@ const ProductModal = ({
       setQty(1);
       setCurrentImageIndex(0);
       setSelectedVariant(null);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
     }
   }, [isOpen, product]);
 
   if (!isOpen || !product) return null;
 
   const images = product.images
-    ? product.images.split(',').filter(Boolean)
+    ? product.images.split(",").filter(Boolean)
     : [];
 
   const mainImage =
     images[currentImageIndex] ||
-    'https://via.placeholder.com/600x600?text=Sin+Imagen';
+    "https://via.placeholder.com/600x600?text=Sin+Imagen";
 
   const category = ALL_CATEGORIES.find(
     (c) => c.id === product.category_id
   );
 
-  const isFashion = category?.group === 'Moda y Accesorios';
+  const isFashion = category?.group === "Moda y Accesorios";
 
   const availableVariants: Variants[] =
     product.variants?.filter(
@@ -113,8 +111,7 @@ const ProductModal = ({
       product.currency.toLowerCase();
 
   const finalPrice =
-    selectedVariant &&
-    selectedVariant.price_override > 0
+    selectedVariant && selectedVariant.price_override > 0
       ? selectedVariant.price_override
       : product.price;
 
@@ -125,227 +122,196 @@ const ProductModal = ({
       selectedVariant: selectedVariant || undefined,
       price: finalPrice
     });
-
     onClose();
   };
 
-  return (
-    <div className="fixed inset-0 z-[200] flex items-end md:items-center justify-center sm:p-4 bg-black/70 backdrop-blur-md animate-in fade-in duration-200">
-      <style>{`
-        @keyframes slideUp {
-          from { transform: translateY(24px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-        .modal-enter { animation: slideUp 0.32s cubic-bezier(0.22,1,0.36,1) forwards; }
-        .dot-indicator { transition: all 0.25s ease; }
-      `}</style>
+  return createPortal(
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-[9999] flex items-end md:items-center justify-center bg-black/70"
+    >
       <div
-        className="modal-enter bg-white w-full h-[92vh] md:h-auto md:max-h-[88vh] md:rounded-[2rem] rounded-t-[2.5rem] md:max-w-5xl shadow-[0_32px_80px_rgba(0,0,0,0.25)] flex flex-col md:flex-row relative overflow-hidden"
-        style={{ borderRadius: ui.borderRadius }}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full md:max-w-5xl bg-white flex flex-col md:flex-row overflow-hidden"
+        style={{
+          borderRadius: ui.borderRadius,
+          maxHeight: "90vh"
+        }}
       >
-        {/* Close button */}
+        {/* CLOSE */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 bg-black/8 hover:bg-black/15 text-black p-2 rounded-full transition-all duration-200 backdrop-blur-sm border border-black/5"
+          className="absolute top-4 right-4 z-10 p-2 rounded-full"
+          style={{ backgroundColor: colors.primary }}
         >
-          <X size={18} strokeWidth={2.5} />
+          <X size={18} />
         </button>
 
-        {/* IMAGEN */}
-        <div className="w-full h-[38vh] md:w-1/2 md:h-auto bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50 flex items-center justify-center p-6 relative shrink-0 overflow-hidden">
-          {/* Decorative background circles */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-[-20%] left-[-10%] w-64 h-64 rounded-full bg-white/60 blur-3xl" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-48 h-48 rounded-full bg-white/40 blur-2xl" />
-          </div>
+        {/* IMAGE */}
+        <div className="w-full md:w-1/2 bg-gray-50 flex items-center justify-center p-6 relative">
+          <img
+            src={mainImage}
+            alt={product.name}
+            className="max-w-full max-h-[400px] object-contain"
+          />
 
-          <div className="relative w-full h-full max-h-[420px] flex items-center justify-center">
-            <img
-              src={mainImage}
-              alt={product.name}
-              className="max-w-full max-h-full object-contain drop-shadow-2xl mix-blend-multiply transition-all duration-500"
-              style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.18))' }}
-            />
+          {images.length > 1 && (
+            <>
+              <button
+                onClick={() =>
+                  setCurrentImageIndex((i) =>
+                    i === 0 ? images.length - 1 : i - 1
+                  )
+                }
+                className="absolute left-2 p-2 bg-white rounded-full"
+              >
+                <ChevronLeft size={16} />
+              </button>
 
-            {images.length > 1 && (
-              <>
-                <button
-                  onClick={() =>
-                    setCurrentImageIndex((i) =>
-                      i === 0 ? images.length - 1 : i - 1
-                    )
-                  }
-                  className="absolute left-2 bg-white/95 hover:bg-white p-2.5 rounded-full shadow-lg hover:scale-110 transition-all duration-200 border border-black/5"
-                >
-                  <ChevronLeft size={18} strokeWidth={2.5} />
-                </button>
-
-                <button
-                  onClick={() =>
-                    setCurrentImageIndex((i) =>
-                      i === images.length - 1 ? 0 : i + 1
-                    )
-                  }
-                  className="absolute right-2 bg-white/95 hover:bg-white p-2.5 rounded-full shadow-lg hover:scale-110 transition-all duration-200 border border-black/5"
-                >
-                  <ChevronRight size={18} strokeWidth={2.5} />
-                </button>
-
-                {/* Dot indicators */}
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-                  {images.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCurrentImageIndex(idx)}
-                      className={`dot-indicator rounded-full ${
-                        idx === currentImageIndex
-                          ? 'w-5 h-1.5 bg-black'
-                          : 'w-1.5 h-1.5 bg-black/20 hover:bg-black/40'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
+              <button
+                onClick={() =>
+                  setCurrentImageIndex((i) =>
+                    i === images.length - 1 ? 0 : i + 1
+                  )
+                }
+                className="absolute right-2 p-2 bg-white rounded-full"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </>
+          )}
         </div>
 
         {/* INFO */}
-        <div className="w-full h-full md:w-1/2 flex flex-col bg-white overflow-hidden">
-          <div className="flex-1 overflow-y-auto p-6 md:p-10">
+        <div className="w-full md:w-1/2 flex flex-col p-6 gap-4">
 
-            {/* Category badge */}
-            <span
-              className="inline-flex items-center text-[10px] font-black uppercase tracking-[0.18em] px-2.5 py-1 rounded-lg mb-3"
-              style={{ backgroundColor: `${colors.accent}15`, color: colors.accent }}
-            >
-              {category?.name || 'General'}
+          {/* HEADER */}
+          <div>
+            <span className="text-xs uppercase text-black tracking-[0.15em] font-black">
+              {category?.name || "Producto"}
             </span>
 
             <h2
-              className="text-3xl font-black uppercase italic tracking-tighter mb-4 mt-1 leading-none text-black"
+              className="text-2xl font-bold mt-1 text-black"
               style={{ fontFamily: ui.fontFamily }}
             >
               {product.name}
             </h2>
 
-            {/* Price block */}
-            <div className="flex items-baseline gap-2 mb-6 pb-6 border-b border-gray-100">
-              <span
-                className="text-4xl font-black tabular-nums"
-                style={{ color: colors.accent }}
-              >
-                ${(finalPrice / 100).toFixed(2)}
-              </span>
-              <span className="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">
-                {product.currency}
-              </span>
+            <div
+              className="text-xl font-bold mt-2"
+              style={{ color: colors.accent }}
+            >
+              ${(finalPrice / 100).toFixed(2)} {product.currency}
             </div>
-
-            {/* VARIANTES */}
-            {hasVariants && (
-              <div className="space-y-3 mb-6">
-                <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">
-                  Variante
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {availableVariants.map((variant) => (
-                    <button
-                      key={variant.uuid}
-                      onClick={() => setSelectedVariant(variant)}
-                      className="relative px-4 py-2 text-xs font-bold rounded-xl transition-all duration-200 overflow-hidden"
-                      style={
-                        selectedVariant?.uuid === variant.uuid
-                          ? { backgroundColor: colors.accent, color: '#fff', border: `2px solid ${colors.accent}` }
-                          : { backgroundColor: 'white', color: '#555', border: '2px solid #e5e7eb' }
-                      }
-                    >
-                      {variant.variant_name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Fashion notice */}
-            {isFashion && (
-              <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl mb-6 flex gap-3">
-                <div className="w-8 h-8 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
-                  <Info className="text-amber-500 w-4 h-4" />
-                </div>
-                <p className="text-xs text-amber-800 font-semibold leading-relaxed">
-                  Confirmaremos tu talla exacta por WhatsApp al finalizar el pedido.
-                </p>
-              </div>
-            )}
-
-            {product.description && (
-              <p className="text-sm text-gray-500 leading-relaxed">
-                {product.description}
-              </p>
-            )}
           </div>
 
-          {/* CONTROLES */}
-          <div className="p-6 border-t border-gray-50 bg-white z-10 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-xs uppercase text-gray-400 tracking-widest">
+          {/* VARIANTS */}
+          {hasVariants && (
+            <div>
+              <p className="text-xs text-black mb-1">
+                Selecciona
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {availableVariants.map((variant) => (
+                  <button
+                    key={variant.uuid}
+                    onClick={() => setSelectedVariant(variant)}
+                    className="px-3 py-1 text-xs rounded"
+                    style={{
+                      backgroundColor:
+                        selectedVariant?.uuid === variant.uuid
+                          ? colors.text
+                          : colors.primary,
+                      color:
+                        selectedVariant?.uuid === variant.uuid
+                          ? "#fff"
+                          : "#000"
+                    }}
+                  >
+                    {variant.variant_name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* DESCRIPTION */}
+          <div>
+            <p className="text-xs text-black uppercase mb-1">
+              Descripción
+            </p>
+
+            <div className="text-sm text-black max-h-28 overflow-y-auto">
+              {product.description || "Sin descripción"}
+            </div>
+          </div>
+
+          {isFashion && (
+            <div
+              className="text-xs p-2 rounded"
+              style={{ backgroundColor: colors.primary, color: colors.text }}
+            >
+              Talla confirmada vía WhatsApp post-compra
+            </div>
+          )}
+
+          {/* FOOTER */}
+          <div className="mt-auto flex flex-col gap-3">
+
+            {/* QTY (FIXED 🔥) */}
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-black">
                 Cantidad
               </span>
 
               <div className="flex items-center bg-gray-50 border border-gray-100 rounded-2xl p-1 gap-1">
                 <button
-                  onClick={() => setQty(Math.max(1, qty - 1))}
-                  className="w-9 h-9 flex items-center justify-center hover:bg-white rounded-xl transition-all duration-200 text-gray-600 hover:text-black hover:shadow-sm"
+                  onClick={() => setQty((prev) => Math.max(1, prev - 1))}
+                  disabled={qty === 1}
+                  className="w-9 h-9 flex items-center justify-center rounded-xl text-gray-600 disabled:opacity-30"
                 >
                   <Minus size={13} strokeWidth={2.5} />
                 </button>
-                <span className="w-10 text-center font-black text-sm tabular-nums">{qty}</span>
+
+                <span className="w-10 text-center font-black text-black text-sm tabular-nums">
+                  {qty}
+                </span>
+
                 <button
-                  onClick={() => setQty(qty + 1)}
-                  className="w-9 h-9 flex items-center justify-center hover:bg-white rounded-xl transition-all duration-200 text-gray-600 hover:text-black hover:shadow-sm"
+                  onClick={() => setQty((prev) => prev + 1)}
+                  className="w-9 h-9 flex items-center justify-center rounded-xl text-gray-600"
                 >
                   <Plus size={13} strokeWidth={2.5} />
                 </button>
               </div>
             </div>
 
+            {/* BUTTON */}
             <button
               disabled={currencyMismatch || !isAllSelected}
               onClick={handleAddToCart}
-              className="w-full py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-200 flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.97]"
+              className="w-full py-3 text-sm font-bold rounded"
               style={{
-                backgroundColor:
-                  currencyMismatch || !isAllSelected
-                    ? '#f3f4f6'
-                    : colors.accent,
-                color:
-                  currencyMismatch || !isAllSelected
-                    ? '#9ca3af'
-                    : '#fff',
-                boxShadow:
-                  currencyMismatch || !isAllSelected
-                    ? 'none'
-                    : `0 8px 32px ${colors.accent}50`,
-                cursor:
-                  currencyMismatch || !isAllSelected
-                    ? 'not-allowed'
-                    : 'pointer',
+                backgroundColor: colors.accent,
+                color: "#fff",
+                opacity: currencyMismatch || !isAllSelected ? 0.5 : 1
               }}
             >
-              <ShoppingBag size={17} strokeWidth={2.5} />
               {hasVariants && !selectedVariant
-                ? 'Selecciona una variante'
-                : STORE_CONFIG.text.addToCart}
+                ? "Elige variante"
+                : "Agregar al carrito"}
             </button>
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
 
+// --- TARJETA DE PRODUCTO ---
 // --- TARJETA DE PRODUCTO ---
 const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Product) => void }) => {
   const mainImg = product.images?.split(',')[0] || 'https://via.placeholder.com/400';
@@ -354,28 +320,38 @@ const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Produc
   return (
     <div 
       onClick={() => onOpen(product)} 
-      className="group bg-white overflow-hidden cursor-pointer flex flex-col h-full relative"
+      className="group overflow-hidden cursor-pointer flex flex-col h-full relative"
       style={{
+        backgroundColor: colors.background,
         borderRadius: ui.borderRadius,
-        boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)',
+        boxShadow: `0 1px 3px ${colors.text}10, 0 1px 2px ${colors.text}08`,
         transition: 'box-shadow 0.3s ease, transform 0.3s ease',
       }}
       onMouseEnter={e => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow = '0 20px 60px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06)';
+        (e.currentTarget as HTMLDivElement).style.boxShadow = `0 20px 60px ${colors.text}1A, 0 4px 16px ${colors.text}0F`;
         (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
       }}
       onMouseLeave={e => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow = '0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)';
+        (e.currentTarget as HTMLDivElement).style.boxShadow = `0 1px 3px ${colors.text}10, 0 1px 2px ${colors.text}08`;
         (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
       }}
     >
       {/* Image area */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+      <div 
+        className="relative aspect-[4/5] overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, ${colors.background} 0%, ${colors.text}08 100%)`
+        }}
+      >
         
         {/* Category badge */}
         <span
           className="absolute top-3 left-3 z-10 text-[9px] font-black uppercase tracking-[0.15em] px-2 py-1 rounded-lg shadow-sm"
-          style={{ backgroundColor: 'rgba(255,255,255,0.92)', color: '#555', backdropFilter: 'blur(8px)' }}
+          style={{ 
+            backgroundColor: `${colors.background}EB`, 
+            color: colors.text, 
+            backdropFilter: 'blur(8px)' 
+          }}
         >
           {category?.name || 'General'}
         </span>
@@ -396,7 +372,19 @@ const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Produc
         {/* Quick view button — desktop */}
         <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out hidden md:block">
           <button
-            className="w-full bg-white text-black py-3 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl hover:bg-black hover:text-white transition-all duration-200"
+            className="w-full py-3 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl transition-all duration-200"
+            style={{
+              backgroundColor: colors.background,
+              color: colors.text,
+            }}
+            onMouseEnter={(e) => {
+              (e.target as HTMLButtonElement).style.backgroundColor = colors.text;
+              (e.target as HTMLButtonElement).style.color = colors.background;
+            }}
+            onMouseLeave={(e) => {
+              (e.target as HTMLButtonElement).style.backgroundColor = colors.background;
+              (e.target as HTMLButtonElement).style.color = colors.text;
+            }}
           >
             Ver Detalles
           </button>
@@ -406,11 +394,25 @@ const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Produc
       {/* Product info */}
       <div className="p-4 flex flex-col flex-grow">
         <h3
-          className="font-bold text-sm uppercase tracking-tight leading-snug line-clamp-2 mb-3 text-gray-900 group-hover:text-gray-600 transition-colors duration-200"
+          className="font-bold text-sm uppercase tracking-tight leading-snug line-clamp-2 mb-3 transition-colors duration-200"
+          style={{
+            color: colors.text,
+          }}
+          onMouseEnter={(e) => {
+            (e.target as HTMLElement).style.color = `${colors.text}99`;
+          }}
+          onMouseLeave={(e) => {
+            (e.target as HTMLElement).style.color = colors.text;
+          }}
         >
           {product.name}
         </h3>
-        <div className="mt-auto flex items-center justify-between pt-3 border-t border-gray-50">
+        <div 
+          className="mt-auto flex items-center justify-between pt-3 border-t"
+          style={{
+            borderColor: `${colors.text}0D`
+          }}
+        >
           <span
             className="font-black text-lg tabular-nums"
             style={{ color: colors.accent }}
@@ -419,7 +421,10 @@ const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Produc
           </span>
           <span
             className="text-[10px] font-extrabold px-2 py-1 rounded-lg uppercase tracking-wide"
-            style={{ backgroundColor: `${colors.accent}12`, color: colors.accent }}
+            style={{ 
+              backgroundColor: `${colors.accent}12`, 
+              color: colors.accent 
+            }}
           >
             {product.currency}
           </span>

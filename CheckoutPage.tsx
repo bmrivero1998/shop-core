@@ -13,6 +13,13 @@ import { PaymentStep } from './components/Checkout/PaymentStep';
 
 import { Loader2, AlertCircle } from 'lucide-react';
 
+// --- CONSTANTES DE TEMA ---
+const colors = STORE_CONFIG.theme.colors;
+const ui = {
+  borderRadius: '12px',
+  fontFamily: "'Inter', sans-serif",
+};
+
 export interface ProjectConfig {
   project_uuid: string;
   base_currency: string;
@@ -126,16 +133,19 @@ export const CheckoutPage = () => {
 
   if (configLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin" size={40} />
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.background }}>
+        <Loader2 className="animate-spin" size={40} style={{ color: colors.accent }} />
       </div>
     );
   }
 
   if (!dbConfig) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        Error cargando configuración
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: colors.background }}>
+        <div className="text-center" style={{ color: colors.text }}>
+          <AlertCircle size={40} className="mx-auto mb-4" style={{ color: colors.accent }} />
+          <p className="font-bold">Error cargando configuración</p>
+        </div>
       </div>
     );
   }
@@ -164,9 +174,42 @@ export const CheckoutPage = () => {
   };
 
   return (
-    <div>
-      <CheckoutProgress step={step} />
-      {renderStep()}
+    <div 
+      className="min-h-screen font-sans"
+      style={{ 
+        backgroundColor: colors.background,
+        fontFamily: ui.fontFamily 
+      }}
+    >
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .checkout-container {
+          animation: fadeIn 0.5s ease-out;
+        }
+      `}</style>
+
+      {/* Header con padding top */}
+      <div 
+        className="border-b sticky top-0 z-40 backdrop-blur-xl"
+        style={{ 
+          backgroundColor: `${colors.background}E6`,
+          borderColor: `${colors.text}10` 
+        }}
+      >
+        <div className="max-w-4xl mx-auto px-4 md:px-6 py-6">
+          <CheckoutProgress step={step} />
+        </div>
+      </div>
+
+      {/* Contenido principal con padding top adicional */}
+      <main className="max-w-4xl mx-auto px-4 md:px-6 py-8">
+        <div className="checkout-container">
+          {renderStep()}
+        </div>
+      </main>
     </div>
   );
 };

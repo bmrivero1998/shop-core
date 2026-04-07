@@ -32,7 +32,7 @@ export const CartModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-[200] overflow-hidden">
+    <div className="fixed inset-0 z-[2000] overflow-hidden">
       
       {/* Overlay */}
       <div 

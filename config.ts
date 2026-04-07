@@ -55,8 +55,8 @@ export const STORE_CONFIG = {
   STRIPE_PUBLIC_KEY: 'pk_live_51Rjrm1Llq8dRY3gU3hr6InTOsEvhoKdySXQp5Mx1duUZBRoFK9DkhTw1OGQTTIaNi0rYsvtUkhunpU4QVKypQu1v00uCU3SVUV',
   STRIPE_ACCOUNT_ID: 'acct_1TEOWZQ92gRrxpNm', // Solo si usas Connect
   // 1. Identidad y Contacto
-  storeName: "Martin Riper Shop", 
-  whatsappNumber: "525656398738", // Número de soporte completo
+  storeName: "Lemuria Mexico Shop", 
+  whatsappNumber: "", // Número de soporte completo
   country: 'MX' as keyof typeof SUPPORTED_COUNTRIES, // Seteado a Costa Rica
   
   // 2. Lógica de Negocio
@@ -74,9 +74,9 @@ export const STORE_CONFIG = {
   theme: {
     colors: {
       primary: '#ececec',
-      accent: '#e40606',
-      background: '#ffffff',
-      text: '#000000'
+      accent: '#c5a059',
+      background: '#0a0a0a',
+      text: '#c5a059'
     },
     ui: {
       borderRadius: '12px', // Un poco más redondeado para look moderno
@@ -89,7 +89,7 @@ export const STORE_CONFIG = {
     addToCart: "Agregar al carrito",
     outOfStock: "Agotado",
     buyNow: "Comprar ahora",
-    shippingNote: "Envío calculado para Mexico. Envios gratis a partir de 1499 mxn.",
+    shippingNote: "Envío calculado para Mexico.",
   },
 
   /**
