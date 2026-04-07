@@ -15,7 +15,8 @@ import {
   Info,
   Filter,
   ChevronDown,
-  Loader2
+  Loader2,
+  AlertCircle
 } from 'lucide-react';
 import { ALL_CATEGORIES, type Category } from './data/category';
 import { createPortal } from 'react-dom';
@@ -67,12 +68,14 @@ const ProductModal = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [qty, setQty] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState<Variants | null>(null);
+  const [isImageZoomed, setIsImageZoomed] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setQty(1);
       setCurrentImageIndex(0);
       setSelectedVariant(null);
+      setIsImageZoomed(false);
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
@@ -102,13 +105,11 @@ const ProductModal = ({
 
   const hasVariants = availableVariants.length > 0;
 
-  const isAllSelected =
-    !hasVariants || selectedVariant !== null;
+  const isAllSelected = !hasVariants || selectedVariant !== null;
 
   const currencyMismatch =
     cart.length > 0 &&
-    cartCurrency.toLowerCase() !==
-      product.currency.toLowerCase();
+    cartCurrency.toLowerCase() !== product.currency.toLowerCase();
 
   const finalPrice =
     selectedVariant && selectedVariant.price_override > 0
@@ -125,186 +126,358 @@ const ProductModal = ({
     onClose();
   };
 
+  const handleImageNavigation = (direction: 'prev' | 'next') => {
+    if (direction === 'prev') {
+      setCurrentImageIndex((i) => (i === 0 ? images.length - 1 : i - 1));
+    } else {
+      setCurrentImageIndex((i) => (i === images.length - 1 ? 0 : i + 1));
+    }
+  };
+
   return createPortal(
     <div
       onClick={onClose}
-      className="fixed inset-0 z-[9999] flex items-end md:items-center justify-center bg-black/70"
+      className="fixed inset-0 z-[9999] flex items-end md:items-center justify-center bg-black/70 backdrop-blur-sm"
+      style={{
+        animation: "fadeIn 0.2s ease",
+      }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full md:max-w-5xl bg-white flex flex-col md:flex-row overflow-hidden"
+        className="w-full h-[85vh] md:h-auto md:max-h-[90vh] md:max-w-5xl flex flex-col md:flex-row overflow-hidden relative"
         style={{
-          borderRadius: ui.borderRadius,
-          maxHeight: "90vh"
+          backgroundColor: colors.background,
+          borderRadius: `clamp(16px, 4vw, ${ui.borderRadius}) clamp(16px, 4vw, ${ui.borderRadius}) 0 0`,
+          borderTopLeftRadius: "clamp(16px, 4vw, 24px)",
+          borderTopRightRadius: "clamp(16px, 4vw, 24px)",
+          animation: "slideUp 0.3s ease",
         }}
       >
-        {/* CLOSE */}
+        {/* CLOSE Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 p-2 rounded-full"
-          style={{ backgroundColor: colors.primary }}
+          className="absolute top-3 right-3 md:top-4 md:right-4 z-20 p-2 rounded-full bg-black/20 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none"
+          style={{ 
+            color: "#fff",
+            transition: "all 0.2s ease"
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.5)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.2)";
+          }}
         >
-          <X size={18} />
+          <X size={20} strokeWidth={2.5} />
         </button>
 
-        {/* IMAGE */}
-        <div className="w-full md:w-1/2 bg-gray-50 flex items-center justify-center p-6 relative">
-          <img
-            src={mainImage}
-            alt={product.name}
-            className="max-w-full max-h-[400px] object-contain"
-          />
+        {/* IMAGE Section */}
+        <div className="w-full md:w-1/2 relative flex items-center justify-center bg-black/5">
+          <div 
+            className="relative w-full h-full flex items-center justify-center"
+            onClick={() => setIsImageZoomed(!isImageZoomed)}
+          >
+            <img
+              src={mainImage}
+              alt={product.name}
+              className="w-full h-full md:max-h-[400px] object-contain transition-transform duration-300"
+              style={{
+                cursor: "zoom-in",
+                transform: isImageZoomed ? "scale(1.5)" : "scale(1)",
+              }}
+            />
 
-          {images.length > 1 && (
-            <>
-              <button
-                onClick={() =>
-                  setCurrentImageIndex((i) =>
-                    i === 0 ? images.length - 1 : i - 1
-                  )
-                }
-                className="absolute left-2 p-2 bg-white rounded-full"
-              >
-                <ChevronLeft size={16} />
-              </button>
+            {/* Image Navigation */}
+            {images.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleImageNavigation('prev');
+                  }}
+                  className="absolute left-2 md:left-3 p-2 md:p-2.5 rounded-full bg-black/30 backdrop-blur-sm text-white hover:bg-black/50 transition-all"
+                  style={{ 
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.2)"
+                  }}
+                >
+                  <ChevronLeft size={18} strokeWidth={2.5} />
+                </button>
 
-              <button
-                onClick={() =>
-                  setCurrentImageIndex((i) =>
-                    i === images.length - 1 ? 0 : i + 1
-                  )
-                }
-                className="absolute right-2 p-2 bg-white rounded-full"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </>
-          )}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleImageNavigation('next');
+                  }}
+                  className="absolute right-2 md:right-3 p-2 md:p-2.5 rounded-full bg-black/30 backdrop-blur-sm text-white hover:bg-black/50 transition-all"
+                  style={{ 
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.2)"
+                  }}
+                >
+                  <ChevronRight size={18} strokeWidth={2.5} />
+                </button>
+
+                {/* Image Indicators */}
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                  {images.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCurrentImageIndex(idx);
+                      }}
+                      className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all"
+                      style={{
+                        backgroundColor: idx === currentImageIndex ? colors.accent : "rgba(255,255,255,0.6)",
+                        transform: idx === currentImageIndex ? "scale(1.3)" : "scale(1)",
+                      }}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         </div>
 
-        {/* INFO */}
-        <div className="w-full md:w-1/2 flex flex-col p-6 gap-4">
-
-          {/* HEADER */}
-          <div>
-            <span className="text-xs uppercase text-black tracking-[0.15em] font-black">
-              {category?.name || "Producto"}
-            </span>
-
-            <h2
-              className="text-2xl font-bold mt-1 text-black"
-              style={{ fontFamily: ui.fontFamily }}
-            >
-              {product.name}
-            </h2>
-
-            <div
-              className="text-xl font-bold mt-2"
-              style={{ color: colors.accent }}
-            >
-              ${(finalPrice / 100).toFixed(2)} {product.currency}
-            </div>
-          </div>
-
-          {/* VARIANTS */}
-          {hasVariants && (
+        {/* INFO Section - Scrollable en móvil */}
+        <div className="w-full md:w-1/2 flex flex-col overflow-y-auto" style={{ maxHeight: "100%" }}>
+          <div className="p-4 md:p-6 space-y-3 md:space-y-4">
+            
+            {/* HEADER */}
             <div>
-              <p className="text-xs text-black mb-1">
-                Selecciona
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {availableVariants.map((variant) => (
-                  <button
-                    key={variant.uuid}
-                    onClick={() => setSelectedVariant(variant)}
-                    className="px-3 py-1 text-xs rounded"
-                    style={{
-                      backgroundColor:
-                        selectedVariant?.uuid === variant.uuid
-                          ? colors.text
-                          : colors.primary,
-                      color:
-                        selectedVariant?.uuid === variant.uuid
-                          ? "#fff"
-                          : "#000"
-                    }}
-                  >
-                    {variant.variant_name}
-                  </button>
-                ))}
+              <span 
+                className="text-[10px] md:text-xs uppercase tracking-[0.15em] font-black"
+                style={{ color: colors.accent }}
+              >
+                {category?.name || "Producto"}
+              </span>
+
+              <h2
+                className="text-xl md:text-2xl font-bold mt-1"
+                style={{ 
+                  fontFamily: ui.fontFamily,
+                  color: colors.text,
+                  fontSize: "clamp(1.25rem, 5vw, 1.5rem)"
+                }}
+              >
+                {product.name}
+              </h2>
+
+              <div
+                className="text-lg md:text-xl font-bold mt-2"
+                style={{ color: colors.accent }}
+              >
+                ${(finalPrice / 100).toFixed(2)} {product.currency}
               </div>
             </div>
-          )}
 
-          {/* DESCRIPTION */}
-          <div>
-            <p className="text-xs text-black uppercase mb-1">
-              Descripción
-            </p>
-
-            <div className="text-sm text-black max-h-28 overflow-y-auto">
-              {product.description || "Sin descripción"}
-            </div>
-          </div>
-
-          {isFashion && (
-            <div
-              className="text-xs p-2 rounded"
-              style={{ backgroundColor: colors.primary, color: colors.text }}
+            {/* Botón Agregar - ANTES de variantes (mobile-first) */}
+            <button
+              disabled={currencyMismatch || !isAllSelected}
+              onClick={handleAddToCart}
+              className="w-full py-3 md:py-3.5 text-sm md:text-base font-bold rounded-xl transition-all duration-200"
+              style={{
+                backgroundColor: colors.accent,
+                color: "#fff",
+                opacity: currencyMismatch || !isAllSelected ? 0.5 : 1,
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                fontSize: "clamp(0.875rem, 3.5vw, 1rem)",
+              }}
+              onMouseEnter={(e) => {
+                if (!currencyMismatch && isAllSelected) {
+                  e.currentTarget.style.transform = "scale(1.02)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+              }}
             >
-              Talla confirmada vía WhatsApp post-compra
-            </div>
-          )}
+              <span className="flex items-center justify-center gap-2">
+                <ShoppingCart size={18} />
+                {hasVariants && !selectedVariant
+                  ? "Elige variante"
+                  : "Agregar al carrito"}
+              </span>
+            </button>
 
-          {/* FOOTER */}
-          <div className="mt-auto flex flex-col gap-3">
+            {/* VARIANTS */}
+            {hasVariants && (
+              <div>
+                <p 
+                  className="text-xs md:text-sm mb-2 font-medium"
+                  style={{ color: colors.text }}
+                >
+                  Selecciona una opción
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {availableVariants.map((variant) => (
+                    <button
+                      key={variant.uuid}
+                      onClick={() => setSelectedVariant(variant)}
+                      className="px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm rounded-lg transition-all duration-200"
+                      style={{
+                        backgroundColor: selectedVariant?.uuid === variant.uuid
+                          ? colors.accent
+                          : `${colors.text}10`,
+                        color: selectedVariant?.uuid === variant.uuid
+                          ? "#fff"
+                          : colors.text,
+                        border: selectedVariant?.uuid === variant.uuid
+                          ? "none"
+                          : `1px solid ${colors.text}20`,
+                      }}
+                      onMouseEnter={(e) => {
+                        if (selectedVariant?.uuid !== variant.uuid) {
+                          e.currentTarget.style.backgroundColor = `${colors.text}20`;
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (selectedVariant?.uuid !== variant.uuid) {
+                          e.currentTarget.style.backgroundColor = `${colors.text}10`;
+                        }
+                      }}
+                    >
+                      {variant.variant_name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-            {/* QTY (FIXED 🔥) */}
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-black">
+            {/* Quantity Selector */}
+            <div className="flex justify-between items-center py-2 border-t border-b"
+              style={{ borderColor: `${colors.text}10` }}
+            >
+              <span 
+                className="text-sm md:text-base font-medium"
+                style={{ color: colors.text }}
+              >
                 Cantidad
               </span>
 
-              <div className="flex items-center bg-gray-50 border border-gray-100 rounded-2xl p-1 gap-1">
+              <div 
+                className="flex items-center p-0.5 md:p-1 gap-0.5 md:gap-1 rounded-xl"
+                style={{ 
+                  backgroundColor: `${colors.text}08`,
+                  border: `1px solid ${colors.text}10`
+                }}
+              >
                 <button
                   onClick={() => setQty((prev) => Math.max(1, prev - 1))}
                   disabled={qty === 1}
-                  className="w-9 h-9 flex items-center justify-center rounded-xl text-gray-600 disabled:opacity-30"
+                  className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg disabled:opacity-30 transition-colors"
+                  style={{ color: colors.text }}
+                  onMouseEnter={(e) => {
+                    if (qty > 1) {
+                      e.currentTarget.style.backgroundColor = `${colors.text}10`;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }}
                 >
-                  <Minus size={13} strokeWidth={2.5} />
+                  <Minus size={14} strokeWidth={2.5} />
                 </button>
 
-                <span className="w-10 text-center font-black text-black text-sm tabular-nums">
+                <span 
+                  className="w-8 md:w-10 text-center font-black text-sm md:text-base tabular-nums"
+                  style={{ color: colors.text }}
+                >
                   {qty}
                 </span>
 
                 <button
                   onClick={() => setQty((prev) => prev + 1)}
-                  className="w-9 h-9 flex items-center justify-center rounded-xl text-gray-600"
+                  className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg transition-colors"
+                  style={{ color: colors.text }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = `${colors.text}10`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }}
                 >
-                  <Plus size={13} strokeWidth={2.5} />
+                  <Plus size={14} strokeWidth={2.5} />
                 </button>
               </div>
             </div>
 
-            {/* BUTTON */}
-            <button
-              disabled={currencyMismatch || !isAllSelected}
-              onClick={handleAddToCart}
-              className="w-full py-3 text-sm font-bold rounded"
-              style={{
-                backgroundColor: colors.accent,
-                color: "#fff",
-                opacity: currencyMismatch || !isAllSelected ? 0.5 : 1
-              }}
-            >
-              {hasVariants && !selectedVariant
-                ? "Elige variante"
-                : "Agregar al carrito"}
-            </button>
+            {/* DESCRIPTION */}
+            <div>
+              <p 
+                className="text-xs md:text-sm uppercase mb-1 md:mb-2 font-bold"
+                style={{ color: colors.text }}
+              >
+                Descripción
+              </p>
+
+              <div 
+                className="text-xs md:text-sm max-h-24 md:max-h-28 overflow-y-auto leading-relaxed"
+                style={{ color: `${colors.text}CC` }}
+              >
+                {product.description || "Sin descripción disponible."}
+              </div>
+            </div>
+
+            {isFashion && (
+              <div
+                className="text-[10px] md:text-xs p-2 md:p-3 rounded-lg flex items-start gap-2"
+                style={{ 
+                  backgroundColor: `${colors.accent}15`, 
+                  color: colors.text,
+                  border: `1px solid ${colors.accent}30`
+                }}
+              >
+                <Info size={14} className="flex-shrink-0 mt-0.5" style={{ color: colors.accent }} />
+                <span>La talla se confirmará vía WhatsApp después de tu compra.</span>
+              </div>
+            )}
+
+            {/* Currency mismatch warning */}
+            {currencyMismatch && (
+              <div
+                className="text-[10px] md:text-xs p-2 md:p-3 rounded-lg flex items-start gap-2"
+                style={{ 
+                  backgroundColor: "#ff444415", 
+                  color: colors.text,
+                  border: "1px solid #ff444430"
+                }}
+              >
+                <AlertCircle size={14} className="flex-shrink-0 mt-0.5" style={{ color: "#ff4444" }} />
+                <span>Tu carrito tiene productos en {cartCurrency}. Vacíalo para agregar este.</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes slideUp {
+          from {
+            transform: translateY(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @media (min-width: 768px) {
+          @keyframes slideUp {
+            from {
+              transform: translateY(-20px);
+              opacity: 0;
+            }
+            to {
+              transform: translateY(0);
+              opacity: 1;
+            }
+          }
+        }
+      `}</style>
     </div>,
     document.body
   );
@@ -312,122 +485,121 @@ const ProductModal = ({
 
 
 // --- TARJETA DE PRODUCTO ---
-// --- TARJETA DE PRODUCTO ---
 const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Product) => void }) => {
-  const mainImg = product.images?.split(',')[0] || 'https://via.placeholder.com/400';
+  // ✅ Manejo correcto de imagen (igual que el bueno)
+  let imageUrl = "";
+  if (product.images) {
+    try {
+      const parsed = JSON.parse(product.images);
+      imageUrl = Array.isArray(parsed) && parsed.length > 0 ? parsed[0] : product.images;
+    } catch {
+      imageUrl = product.images;
+    }
+  }
+
   const category = ALL_CATEGORIES.find(c => c.id === product.category_id);
 
   return (
-    <div 
-      onClick={() => onOpen(product)} 
-      className="group overflow-hidden cursor-pointer flex flex-col h-full relative"
+    <div
+      onClick={() => onOpen(product)}
+      className="group cursor-pointer flex flex-col h-full overflow-hidden rounded-2xl transition-all duration-300"
       style={{
         backgroundColor: colors.background,
-        borderRadius: ui.borderRadius,
-        boxShadow: `0 1px 3px ${colors.text}10, 0 1px 2px ${colors.text}08`,
-        transition: 'box-shadow 0.3s ease, transform 0.3s ease',
-      }}
-      onMouseEnter={e => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow = `0 20px 60px ${colors.text}1A, 0 4px 16px ${colors.text}0F`;
-        (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)';
-      }}
-      onMouseLeave={e => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow = `0 1px 3px ${colors.text}10, 0 1px 2px ${colors.text}08`;
-        (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)';
+        boxShadow: `0 4px 12px ${colors.text}12`,
       }}
     >
-      {/* Image area */}
-      <div 
-        className="relative aspect-[4/5] overflow-hidden"
-        style={{
-          background: `linear-gradient(135deg, ${colors.background} 0%, ${colors.text}08 100%)`
-        }}
-      >
+      {/* Imagen */}
+      <div className="relative aspect-[4/5] overflow-hidden">
         
-        {/* Category badge */}
+        {/* Categoría */}
         <span
-          className="absolute top-3 left-3 z-10 text-[9px] font-black uppercase tracking-[0.15em] px-2 py-1 rounded-lg shadow-sm"
-          style={{ 
-            backgroundColor: `${colors.background}EB`, 
-            color: colors.text, 
-            backdropFilter: 'blur(8px)' 
+          className="absolute top-3 left-3 z-10 text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md"
+          style={{
+            backgroundColor: `${colors.background}E6`,
+            color: colors.text,
+            backdropFilter: 'blur(6px)'
           }}
         >
           {category?.name || 'General'}
         </span>
 
-        <img
-          src={mainImg}
-          alt={product.name}
-          className="w-full h-full object-cover transform group-hover:scale-108 transition-transform duration-700"
-          style={{ transition: 'transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94)' }}
-        />
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-xs opacity-50">
+            SIN IMAGEN
+          </div>
+        )}
 
-        {/* Gradient overlay on hover */}
-        <div
-          className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100"
-          style={{ transition: 'opacity 0.35s ease' }}
-        />
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        {/* Quick view button — desktop */}
-        <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out hidden md:block">
+        {/* Botón */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 hidden md:block">
           <button
-            className="w-full py-3 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl transition-all duration-200"
+            onClick={(e) => {
+              e.stopPropagation(); // 🔥 importante
+              onOpen(product);
+            }}
+            className="w-full py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all"
             style={{
               backgroundColor: colors.background,
               color: colors.text,
             }}
-            onMouseEnter={(e) => {
-              (e.target as HTMLButtonElement).style.backgroundColor = colors.text;
-              (e.target as HTMLButtonElement).style.color = colors.background;
-            }}
-            onMouseLeave={(e) => {
-              (e.target as HTMLButtonElement).style.backgroundColor = colors.background;
-              (e.target as HTMLButtonElement).style.color = colors.text;
-            }}
           >
-            Ver Detalles
+            Ver detalles
           </button>
         </div>
       </div>
 
-      {/* Product info */}
+      {/* Info */}
       <div className="p-4 flex flex-col flex-grow">
         <h3
-          className="font-bold text-sm uppercase tracking-tight leading-snug line-clamp-2 mb-3 transition-colors duration-200"
-          style={{
-            color: colors.text,
-          }}
-          onMouseEnter={(e) => {
-            (e.target as HTMLElement).style.color = `${colors.text}99`;
-          }}
-          onMouseLeave={(e) => {
-            (e.target as HTMLElement).style.color = colors.text;
-          }}
+          className="font-bold text-sm leading-snug line-clamp-2 mb-2 transition-colors"
+          style={{ color: colors.text }}
         >
           {product.name}
         </h3>
-        <div 
-          className="mt-auto flex items-center justify-between pt-3 border-t"
-          style={{
-            borderColor: `${colors.text}0D`
-          }}
+
+        {product.description && (
+          <p
+            className="text-xs mb-3 line-clamp-3"
+            style={{ color: `${colors.text}99` }}
+          >
+            {product.description}
+          </p>
+        )}
+
+        {/* Footer */}
+        <div
+          className="mt-auto pt-3 border-t flex items-center justify-between"
+          style={{ borderColor: `${colors.text}1A` }}
         >
           <span
-            className="font-black text-lg tabular-nums"
+            className="font-bold text-lg"
             style={{ color: colors.accent }}
           >
             ${(product.price / 100).toFixed(2)}
           </span>
-          <span
-            className="text-[10px] font-extrabold px-2 py-1 rounded-lg uppercase tracking-wide"
-            style={{ 
-              backgroundColor: `${colors.accent}12`, 
-              color: colors.accent 
+
+          {/* 🔥 lógica original respetada */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpen(product);
+            }}
+            className="text-[10px] font-bold px-3 py-1 rounded-md uppercase tracking-wide transition-all"
+            style={{
+              backgroundColor: `${colors.accent}20`,
+              color: colors.accent,
             }}
           >
-            {product.currency}
-          </span>
+            Comprar
+          </button>
         </div>
       </div>
     </div>
