@@ -46,14 +46,14 @@ export const STORE_CONFIG = {
   isStoreOpen: true,
 
   // Project UUID
-  PROJECT_UUID: '174d380b-86a6-4d1f-999b-2bafc81a51e0',
+  PROJECT_UUID: '8423afec-23b0-46d1-b63d-04e8d91b6493',
   
   // Tu API URL
   API_URL: 'https://metritrak-workers.kripto-bmrp.workers.dev/v1',
   
   // Llave Pública de Stripe
   STRIPE_PUBLIC_KEY: 'pk_live_51Rjrm1Llq8dRY3gU3hr6InTOsEvhoKdySXQp5Mx1duUZBRoFK9DkhTw1OGQTTIaNi0rYsvtUkhunpU4QVKypQu1v00uCU3SVUV',
-  STRIPE_ACCOUNT_ID: 'acct_1TEOWZQ92gRrxpNm', // Solo si usas Connect
+  STRIPE_ACCOUNT_ID: 'acct_1TIBsIL01Ysem4LZ', // Solo si usas Connect
   // 1. Identidad y Contacto
   storeName: "Tienda Oficial de Lemuria", // Nombre de la tienda
   whatsappNumber: "", // Número de soporte completo
