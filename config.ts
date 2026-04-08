@@ -55,7 +55,7 @@ export const STORE_CONFIG = {
   STRIPE_PUBLIC_KEY: 'pk_live_51Rjrm1Llq8dRY3gU3hr6InTOsEvhoKdySXQp5Mx1duUZBRoFK9DkhTw1OGQTTIaNi0rYsvtUkhunpU4QVKypQu1v00uCU3SVUV',
   STRIPE_ACCOUNT_ID: 'acct_1TEOWZQ92gRrxpNm', // Solo si usas Connect
   // 1. Identidad y Contacto
-  storeName: "Lemuria Mexico Shop", 
+  storeName: "Tienda Oficial de Lemuria", // Nombre de la tienda
   whatsappNumber: "", // Número de soporte completo
   country: 'MX' as keyof typeof SUPPORTED_COUNTRIES, // Seteado a Costa Rica
   

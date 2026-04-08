@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { ALL_CATEGORIES, type Category } from './data/category';
 import { createPortal } from 'react-dom';
+import { Link } from 'react-router-dom';
 
 // --- CONSTANTES DE TEMA ---
 const colors = STORE_CONFIG.theme.colors;
@@ -661,7 +662,8 @@ export const StorePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F7F8] font-sans pb-24 relative">
+    // Agregamos pt-[70px] para que todo baje sin chocar con el Navbar principal
+    <div className="min-h-screen bg-[#F7F7F8] font-sans pb-24 relative pt-[70px]">
       <style>{`
         @keyframes shimmer {
           0% { transform: translateX(-100%); }
@@ -675,28 +677,40 @@ export const StorePage = () => {
         .search-input::placeholder { color: #bbb; }
       `}</style>
 
-      {/* 1. TOP HEADER */}
+      {/* 1. TOP HEADER PREMIUM */}
       <nav
-        className="bg-white/85 backdrop-blur-xl border-b sticky top-0 z-40 px-4 md:px-8 h-16 flex items-center justify-between"
+        className="bg-white/85 backdrop-blur-xl border-b sticky top-[70px] z-40 px-4 md:px-8 h-16 flex items-center justify-between"
         style={{ borderColor: 'rgba(0,0,0,0.07)' }}
       >
-        <div className="flex items-center gap-3">
-          {/* Decorative accent dot */}
-          <span
-            className="w-2 h-2 rounded-full"
-            style={{ backgroundColor: colors.accent }}
-          />
-          <h1
-            className="font-black text-xl tracking-tighter italic uppercase text-black"
-            style={{ fontFamily: ui.fontFamily }}
+        <div className="flex items-center gap-4">
+          {/* Botón de regreso minimalista y pro */}
+          <Link
+            to="/"
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 hover:bg-black hover:text-white transition-all duration-300 text-gray-400"
+            title="Volver al inicio"
           >
-            {STORE_CONFIG.storeName}
-          </h1>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m12 19-7-7 7-7"/>
+              <path d="M19 12H5"/>
+            </svg>
+          </Link>
+          
+          <div className="flex flex-col justify-center">
+            <span className="text-[9px] text-gray-400 font-black tracking-[0.3em] uppercase mb-[2px]">
+              Oficial
+            </span>
+            <h1
+              className="font-black text-xl tracking-tighter uppercase text-black leading-none m-0"
+              style={{ fontFamily: ui.fontFamily }}
+            >
+              {STORE_CONFIG.storeName}
+            </h1>
+          </div>
         </div>
 
         {/* Product count badge */}
         {!loading && (
-          <span className="text-[11px] font-bold text-gray-400 tabular-nums hidden md:block">
+          <span className="text-[11px] font-bold text-gray-400 tabular-nums hidden md:block border border-gray-200 px-3 py-1 rounded-full">
             {filtered.length} producto{filtered.length !== 1 ? 's' : ''}
           </span>
         )}
@@ -704,26 +718,40 @@ export const StorePage = () => {
 
       {/* 2. BARRA DE HERRAMIENTAS STICKY */}
       <div
-        className="bg-white/95 backdrop-blur-md border-b sticky top-16 z-[30] px-4 py-3"
+        className="bg-white/95 backdrop-blur-md border-b sticky top-[134px] z-[30] px-4 py-3"
         style={{ borderColor: 'rgba(0,0,0,0.06)', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}
       >
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-3 items-center justify-between">
 
           {/* Input Búsqueda */}
           <div className="relative w-full md:max-w-md group">
-            <Search
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-black transition-colors duration-200"
-              size={15}
-              strokeWidth={2.5}
-            />
-            <input
-              type="text"
-              placeholder="Buscar producto..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="search-input w-full bg-gray-50 hover:bg-gray-100/80 focus:bg-white border border-gray-100 focus:border-gray-300 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium transition-all duration-200 outline-none"
-              style={{ boxShadow: 'none' }}
-            />
+            {/* Contenedor relativo para aislar el posicionamiento */}
+<div className="relative w-full group" style={{ isolation: 'isolate' }}>
+  
+  {/* El Icono: Forzamos el z-index para que no quede detrás del input de Bootstrap */}
+  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none z-10">
+    <Search
+      className="text-gray-400 group-focus-within:!text-black transition-colors duration-200"
+      size={15}
+      strokeWidth={2.5}
+    />
+  </div>
+
+  {/* El Input: Limpiamos las "mamadas" de Bootstrap */}
+  <input
+    type="text"
+    placeholder="Buscar producto..."
+    value={search}
+    onChange={e => setSearch(e.target.value)}
+    className="w-full !bg-gray-50 hover:!bg-gray-100/80 focus:!bg-white !border !border-gray-100 focus:!border-gray-300 !rounded-xl !pl-10 !pr-4 !py-2.5 !text-sm !font-medium !transition-all !duration-200 !outline-none !text-black !ring-0"
+    style={{ 
+      boxShadow: 'none', 
+      lineHeight: 'normal', // Bootstrap a veces rompe el centrado vertical con line-height
+      margin: 0             // Bootstrap añade margenes a veces
+    }}
+  />
+</div>
+        
             {search && (
               <button
                 onClick={() => setSearch('')}
@@ -735,29 +763,37 @@ export const StorePage = () => {
           </div>
 
           {/* Selector de Categorías */}
-          <div className="relative w-full md:w-64 shrink-0">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-              <Filter size={14} strokeWidth={2} />
-            </div>
-            <select
-              value={selectedCat}
-              onChange={(e) => setSelectedCat(e.target.value)}
-              className="w-full appearance-none bg-white border border-gray-200 hover:border-gray-300 focus:border-gray-400 rounded-xl pl-9 pr-10 py-2.5 text-xs font-bold uppercase tracking-wide cursor-pointer outline-none text-black transition-all duration-200"
-              style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}
-            >
-              <option value="all">Todas las Categorías</option>
-              {ALL_CATEGORIES.map((c: Category) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-              <ChevronDown size={14} strokeWidth={2.5} />
-            </div>
-          </div>
+          <div className="relative w-full md:w-64 shrink-0 group">
+  {/* Icono Filtro Izquierda */}
+  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+    <Filter size={14} strokeWidth={2} className="text-gray-400 group-focus-within:!text-black transition-colors" />
+  </div>
 
-        </div>
+  <select
+    value={selectedCat}
+    onChange={(e) => setSelectedCat(e.target.value)}
+    className="w-full !appearance-none bg-white !border !border-gray-200 hover:!border-gray-300 focus:!border-gray-400 !rounded-xl !pl-9 !pr-10 !py-2.5 !text-[11px] !font-bold !uppercase !tracking-wide cursor-pointer !outline-none !text-black !transition-all !duration-200 !ring-0"
+    style={{ 
+      boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+      backgroundImage: 'none', // Mata la flecha de Bootstrap que causa la sobreposición
+      lineHeight: 'normal'
+    }}
+  >
+    <option value="all">Todas las Categorías</option>
+    {ALL_CATEGORIES.map((c) => (
+      <option key={c.id} value={c.id}>
+        {c.name}
+      </option>
+    ))}
+  </select>
+
+  {/* Icono Flecha Derecha */}
+  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none z-10">
+    <ChevronDown size={14} strokeWidth={2.5} className="text-gray-400 group-focus-within:!text-black" />
+  </div>
+</div>
+
+        </div>  
       </div>
 
       {/* 3. GRID DE PRODUCTOS */}

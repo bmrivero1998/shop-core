@@ -1,5 +1,5 @@
 import { SUPPORTED_COUNTRIES, STORE_CONFIG } from '../../config';
-import { Globe, ArrowRight, MessageCircle, AlertCircle } from 'lucide-react';
+import { Globe, ArrowRight, MessageCircle, AlertCircle, ChevronDown } from 'lucide-react';
 import type { CheckoutContext, ProjectConfig } from '../../interfaces/config.interface';
 
 interface CountryStepProps {
@@ -23,7 +23,6 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
 
   const canProceed = hasSelectedCountry && (!isInternational || (isInternational && hasIntlRate));
 
-  // Variables para pintar el texto según el tema
   const colors = STORE_CONFIG.theme.colors;
   const textColorStyle = { color: colors.accent };
   const inputTextColorStyle = { color: colors.text };
@@ -49,27 +48,41 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
       </div>
 
       <div className="space-y-4">
-        <div className="relative">
-          <Globe className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: colors.accent }} size={20} />
+        {/* CONTENEDOR DEL SELECT BLINDADO */}
+        <div className="relative group" style={{ isolation: 'isolate' }}>
+          {/* Icono Mundo (Izquierda) */}
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+            <Globe style={{ color: colors.accent }} size={20} />
+          </div>
 
           <select
             value={selectedCountry || ''}
             onChange={(e) => setSelectedCountry(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-transparent focus:border-black rounded-2xl appearance-none font-bold leading-tight transition focus:outline-none focus:ring-0"
-            style={inputTextColorStyle}
+            className="w-full !appearance-none bg-gray-50 !border-2 !border-transparent focus:!border-black !rounded-2xl !pl-12 !pr-10 !py-4 !font-bold !leading-tight !transition !focus:outline-none !focus:ring-0 !text-black"
+            style={{ 
+              ...inputTextColorStyle,
+              backgroundImage: 'none', // Mata la flecha de Bootstrap
+              lineHeight: 'normal'
+            }}
           >
-            <option value="" disabled style={inputTextColorStyle}>
+            <option value="" disabled>
               🌍 Selecciona tu país
             </option>
 
             {Object.entries(SUPPORTED_COUNTRIES).map(([code, info]) => (
-              <option key={code} value={code} style={inputTextColorStyle}>
+              <option key={code} value={code}>
                 {info.flag} {info.name}
               </option>
             ))}
           </select>
+
+          {/* Icono Flecha (Derecha) - Para que no se vea el default de Bootstrap */}
+          <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none z-10">
+            <ChevronDown size={18} className="text-gray-400" />
+          </div>
         </div>
 
+        {/* MENSAJES DE ESTADO */}
         {!hasSelectedCountry && (
           <div className="bg-gray-100 p-4 rounded-2xl text-xs font-bold" style={inputTextColorStyle}>
             Debes seleccionar un país para continuar.
