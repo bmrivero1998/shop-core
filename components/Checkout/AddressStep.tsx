@@ -219,35 +219,40 @@ return (
             </div>
 
             {/* Calle y Números */}
-            <div className="space-y-1 md:col-span-2">
-              <label className="text-[10px] font-black uppercase" style={textColorStyle}>Calle y Número</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Calle"
-                  value={customerData.billing_address.street}
-                  onChange={(e) => updateBillingAddressField('street', e.target.value)}
-                  className="flex-[3] !p-3 !bg-gray-50 !border-none !rounded-xl focus:!ring-2 focus:!ring-black !transition !font-medium !text-black"
-                  style={inputTextColorStyle}
-                />
-                <input
-                  type="text"
-                  placeholder="No. Ext"
-                  value={customerData.billing_address.number_ext}
-                  onChange={(e) => updateBillingAddressField('number_ext', e.target.value)}
-                  className="flex-1 !p-3 !bg-gray-50 !border-none !rounded-xl focus:!ring-2 focus:!ring-black !transition !font-medium !text-black"
-                  style={inputTextColorStyle}
-                />
-                <input
-                  type="text"
-                  placeholder="Int (Op)"
-                  value={customerData.billing_address.number_int}
-                  onChange={(e) => updateBillingAddressField('number_int', e.target.value)}
-                  className="flex-1 !p-3 !bg-gray-50 !border-none !rounded-xl focus:!ring-2 focus:!ring-black !transition !font-medium !text-black"
-                  style={inputTextColorStyle}
-                />
-              </div>
-            </div>
+         <div className="space-y-1 md:col-span-2">
+          <label className="text-[10px] font-black uppercase" style={textColorStyle}>
+            Calle y Número
+          </label>
+
+          <div className="flex flex-wrap gap-2">
+            <input
+              type="text"
+              placeholder="Calle"
+              value={customerData.billing_address.street}
+              onChange={(e) => updateBillingAddressField('street', e.target.value)}
+              className="w-full md:flex-[3] md:w-auto !p-3 !bg-gray-50 !border-none !rounded-xl focus:!ring-2 focus:!ring-black !transition !font-medium !text-black"
+              style={inputTextColorStyle}
+            />
+
+            <input
+              type="text"
+              placeholder="No. Ext"
+              value={customerData.billing_address.number_ext}
+              onChange={(e) => updateBillingAddressField('number_ext', e.target.value)}
+              className="w-[calc(50%-4px)] md:flex-1 md:w-auto !p-3 !bg-gray-50 !border-none !rounded-xl focus:!ring-2 focus:!ring-black !transition !font-medium !text-black"
+              style={inputTextColorStyle}
+            />
+
+            <input
+              type="text"
+              placeholder="Int (Opcional)"
+              value={customerData.billing_address.number_int}
+              onChange={(e) => updateBillingAddressField('number_int', e.target.value)}
+              className="w-[calc(50%-4px)] md:flex-1 md:w-auto !p-3 !bg-gray-50 !border-none !rounded-xl focus:!ring-2 focus:!ring-black !transition !font-medium !text-black"
+              style={inputTextColorStyle}
+            />
+          </div>
+        </div>
 
             {/* RFC / Tax ID */}
             <div className="space-y-1 md:col-span-2 mt-2 pt-4 border-t border-dashed">
