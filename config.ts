@@ -53,7 +53,7 @@ export const STORE_CONFIG = {
   
   // Llave Pública de Stripe
   STRIPE_PUBLIC_KEY: 'pk_live_51Rjrm1Llq8dRY3gU3hr6InTOsEvhoKdySXQp5Mx1duUZBRoFK9DkhTw1OGQTTIaNi0rYsvtUkhunpU4QVKypQu1v00uCU3SVUV',
-  STRIPE_ACCOUNT_ID: 'acct_1TIBsIL01Ysem4LZ', // Solo si usas Connect
+  STRIPE_ACCOUNT_ID: 'acct_1TPxnqLwWTFaxNjt', // Solo si usas Connect
   // 1. Identidad y Contacto
   storeName: "Tienda Oficial de Lemuria", // Nombre de la tienda
   whatsappNumber: "", // Número de soporte completo
