@@ -21,6 +21,7 @@ import {
 import { ALL_CATEGORIES, type Category } from './data/category';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
+import { createMagicBrillitos } from '../../helpers/animation-helper';
 
 // --- CONSTANTES DE TEMA ---
 const colors = STORE_CONFIG.theme.colors;
@@ -117,7 +118,8 @@ const ProductModal = ({
       ? selectedVariant.price_override
       : product.price;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+    createMagicBrillitos(e.clientX, e.clientY, colors.accent);
     addToCart({
       ...product,
       quantity: qty,
@@ -274,7 +276,7 @@ const ProductModal = ({
             {/* Botón Agregar - ANTES de variantes (mobile-first) */}
             <button
               disabled={currencyMismatch || !isAllSelected}
-              onClick={handleAddToCart}
+             onClick={(e) => handleAddToCart(e)}
               className="w-full py-3 md:py-3.5 text-sm md:text-base font-bold rounded-xl transition-all duration-200"
               style={{
                 backgroundColor: colors.accent,
@@ -663,7 +665,7 @@ export const StorePage = () => {
 
   return (
     // Agregamos pt-[70px] para que todo baje sin chocar con el Navbar principal
-    <div className="min-h-screen bg-[#F7F7F8] font-sans pb-24 relative pt-[70px]">
+    <div className="min-h-screen bg-[#F7F7F8] font-sans pb-24 relative">
       <style>{`
         @keyframes shimmer {
           0% { transform: translateX(-100%); }
