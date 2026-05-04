@@ -175,7 +175,7 @@ const ProductModal = ({
         </button>
 
         {/* IMAGE Section */}
-        <div className="w-full md:w-1/2 relative flex items-center justify-center bg-black/5">
+        <div className="w-full md:w-1/2 h-[45vh] md:h-auto shrink-0 relative flex items-center justify-center bg-black/5">
           <div 
             className="relative w-full h-full flex items-center justify-center"
             onClick={() => setIsImageZoomed(!isImageZoomed)}
@@ -242,7 +242,7 @@ const ProductModal = ({
         </div>
 
         {/* INFO Section - Scrollable en móvil */}
-        <div className="w-full md:w-1/2 flex flex-col overflow-y-auto" style={{ maxHeight: "100%" }}>
+        <div className="w-full md:w-1/2 flex-1 flex flex-col overflow-y-auto" style={{ maxHeight: "100%" }}>
           <div className="p-4 md:p-6 space-y-3 md:space-y-4">
             
             {/* HEADER */}
