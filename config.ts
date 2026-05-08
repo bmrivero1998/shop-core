@@ -62,7 +62,7 @@ export const STORE_CONFIG = {
   // 2. Lógica de Negocio
   mode: 'shop' as 'shop' | 'catalog', 
   businessType: 'physical' as 'physical' | 'service', 
-  rawWhatsApp: '5656398738', // Número local de CR (sin el 506)
+  rawWhatsApp: '', // Número local de CR (sin el 506)
 
   // 3. Restricciones Geográficas (Local-First)
   location: {
