@@ -175,3 +175,27 @@ export const STORE_CONFIG = {
     return `${info.dialCode}${this.rawWhatsApp}`;
   }
 };
+
+
+/**
+ * Configuración de Stripe
+ * https://stripe.com/docs/api
+ * 
+ * Instalar Stripe
+ * https://stripe.com/docs/stripe-js
+ * 
+ * Instalar Stripe Elements
+ * https://stripe.com/docs/stripe-js
+ * 
+ * Instalar Stripe React
+ * https://stripe.com/docs/stripe-react
+ * npm install @stripe/react-stripe-js
+ * 
+ * Instalar TailwindCSS
+ * https://tailwindcss.com/docs
+ * npm install -D tailwindcss postcss autoprefixer 
+ * 
+ * Instalar Axios
+ * https://axios-http.com/docs/intro
+ * npm install axios
+ */
