@@ -34,7 +34,7 @@ export const ProductDetailPage = () => {
         setLoading(true);
         // Usamos el nuevo endpoint de resolución inteligente
         const { data: response } = await axios.get(
-          `${STORE_CONFIG.API_URL}/resolve/${uuid}/${STORE_CONFIG.PROJECT_UUID}`
+          `${STORE_CONFIG.API_URL}/products/resolve/${uuid}/${STORE_CONFIG.PROJECT_UUID}`
         );
         
         const fetchedProduct = response.data;
