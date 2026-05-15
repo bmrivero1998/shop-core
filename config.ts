@@ -46,23 +46,23 @@ export const STORE_CONFIG = {
   isStoreOpen: true,
 
   // Project UUID
-  PROJECT_UUID: '8423afec-23b0-46d1-b63d-04e8d91b6493',
+  PROJECT_UUID: '174d380b-86a6-4d1f-999b-2bafc81a51e0',
   
   // Tu API URL
   API_URL: 'https://metritrak-workers.kripto-bmrp.workers.dev/v1',
   
   // Llave Pública de Stripe
   STRIPE_PUBLIC_KEY: 'pk_live_51Rjrm1Llq8dRY3gU3hr6InTOsEvhoKdySXQp5Mx1duUZBRoFK9DkhTw1OGQTTIaNi0rYsvtUkhunpU4QVKypQu1v00uCU3SVUV',
-  STRIPE_ACCOUNT_ID: 'acct_1TPxnqLwWTFaxNjt', // Solo si usas Connect
+  STRIPE_ACCOUNT_ID: 'acct_1TEOWZQ92gRrxpNm', // Solo si usas Connect
   // 1. Identidad y Contacto
-  storeName: "Tienda Oficial de Lemuria", // Nombre de la tienda
-  whatsappNumber: "", // Número de soporte completo
+  storeName: "Martin Riper Shop", 
+  whatsappNumber: "525656398738", // Número de soporte completo
   country: 'MX' as keyof typeof SUPPORTED_COUNTRIES, // Seteado a Costa Rica
   
   // 2. Lógica de Negocio
   mode: 'shop' as 'shop' | 'catalog', 
   businessType: 'physical' as 'physical' | 'service', 
-  rawWhatsApp: '', // Número local de CR (sin el 506)
+  rawWhatsApp: '5656398738', // Número local de CR (sin el 506)
 
   // 3. Restricciones Geográficas (Local-First)
   location: {
@@ -74,9 +74,9 @@ export const STORE_CONFIG = {
   theme: {
     colors: {
       primary: '#ececec',
-      accent: '#c5a059',
-      background: '#0a0a0a',
-      text: '#c5a059'
+      accent: '#e40606',
+      background: '#ffffff',
+      text: '#000000'
     },
     ui: {
       borderRadius: '12px', // Un poco más redondeado para look moderno
@@ -89,7 +89,7 @@ export const STORE_CONFIG = {
     addToCart: "Agregar al carrito",
     outOfStock: "Agotado",
     buyNow: "Comprar ahora",
-    shippingNote: "Envío calculado para Mexico.",
+    shippingNote: "Envío calculado para Mexico. Envios gratis a partir de 1499 mxn.",
   },
 
   /**
