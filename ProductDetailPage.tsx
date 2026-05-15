@@ -91,7 +91,7 @@ export const ProductDetailPage = () => {
           />
           {images.length > 1 && (
             <div className="absolute inset-x-0 bottom-4 flex justify-center gap-2">
-              {images.map((_, i) => (
+              {images.map((_:any, i:any) => (
                 <button 
                   key={i} 
                   onClick={() => setCurrentImage(i)}
