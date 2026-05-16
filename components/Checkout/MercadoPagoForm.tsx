@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+/*import React, { useEffect, useRef } from 'react';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import type { ComponentProps } from 'react';
 import { Lock } from 'lucide-react';
@@ -60,3 +60,4 @@ export const MercadoPagoForm: React.FC<MercadoPagoFormProps> = ({ preferenceId }
     </div>
   );
 };
+*/

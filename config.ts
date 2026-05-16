@@ -50,6 +50,9 @@ export const STORE_CONFIG = {
   
   // Tu API URL
   API_URL: 'https://metritrak-workers.kripto-bmrp.workers.dev/v1',
+
+  provider: 'stripe', // Solo Stripe por ahora, pero podríamos agregar más en el futuro,
+  locale: 'es-MX', // Configura el idioma para Stripe Checkout y otros textos predeterminados,
   
   // Llave Pública de Stripe
   STRIPE_PUBLIC_KEY: 'pk_live_51Rjrm1Llq8dRY3gU3hr6InTOsEvhoKdySXQp5Mx1duUZBRoFK9DkhTw1OGQTTIaNi0rYsvtUkhunpU4QVKypQu1v00uCU3SVUV',
