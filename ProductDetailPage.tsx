@@ -34,7 +34,7 @@ export const ProductDetailPage = () => {
       try {
         setLoading(true);
         // Asumiendo que tu API tiene un endpoint para producto individual
-        const { data } = await axios.get(`${STORE_CONFIG.API_URL}/products/${uuid}`);
+        const { data } = await axios.get(`${STORE_CONFIG.API_URL}/products/resolve/${uuid}/${STORE_CONFIG.PROJECT_UUID}/`);
         setProduct(data);
       } catch (err) {
         console.error("Error fetching product:", err);
@@ -91,7 +91,7 @@ export const ProductDetailPage = () => {
           />
           {images.length > 1 && (
             <div className="absolute inset-x-0 bottom-4 flex justify-center gap-2">
-              {images.map((_, i) => (
+              {images.map((_:any, i:number) => (
                 <button 
                   key={i} 
                   onClick={() => setCurrentImage(i)}

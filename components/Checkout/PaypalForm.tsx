@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+/*import React, { useState } from 'react';
 import {
   PayPalScriptProvider,
   PayPalButtons,
@@ -104,3 +104,4 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
     </div>
   );
 };
+*/

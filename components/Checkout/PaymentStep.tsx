@@ -4,8 +4,8 @@ import { useCart } from '../../CartContext';
 import type { ProjectConfig } from '../../interfaces/config.interface';
 
 // --- IMPORTACIÓN DE PASARELAS MODULARIZADAS ---
-import { MercadoPagoForm } from './MercadoPagoForm';
-import { PayPalPaymentForm } from './PaypalForm';
+//import { MercadoPagoForm } from './MercadoPagoForm';
+//import { PayPalPaymentForm } from './PaypalForm';
 import { StripeForm } from './StripeForm';
 
 interface PaymentStepProps {
@@ -153,7 +153,7 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ provider, paymentData,
         />
       )}
 
-      {provider === 'paypal' && paymentData?.ppOrderId && (
+    {/*  {provider === 'paypal' && paymentData?.ppOrderId && (
         <PayPalPaymentForm 
           ppOrderId={paymentData.ppOrderId} 
           currency={dbConfig.base_currency} 
@@ -164,7 +164,7 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ provider, paymentData,
         <MercadoPagoForm 
           preferenceId={paymentData.preferenceId} 
         />
-      )}
+      )}*/}
     </div>
   );
 };
