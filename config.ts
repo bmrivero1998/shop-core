@@ -106,7 +106,7 @@ export const STORE_CONFIG = {
   storeName: "Gazel Shop", 
   whatsappNumber: "50688887777", // Número COMPLETO (Código país + número) para redirección de WhatsApp
   country: 'CR' as keyof typeof SUPPORTED_COUNTRIES, // País principal de operaciones
-  locale: 'es-US' as keyof typeof LOCALE_CURRENCY_MAP, // Código de localización (Afecta formato de moneda, fechas y SDKs de pago)
+  locale: 'en-US' as keyof typeof LOCALE_CURRENCY_MAP, // Código de localización (Afecta formato de moneda, fechas y SDKs de pago). 'es-US' no existe en LOCALE_CURRENCY_MAP: el backend no reconocía la moneda y no cobraba en USD.
   provider: 'paypal' as 'paypal', // Gazel Shop cobra únicamente vía PayPal
   // -------------------------------------------------------------------------
   // 3. LÓGICA DE NEGOCIO (Controladores de comportamiento)
