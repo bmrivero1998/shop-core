@@ -34,9 +34,8 @@ export const CheckoutPage = () => {
   const [dbConfig, setDbConfig] = useState<ProjectConfig | null>(null);
   const [configLoading, setConfigLoading] = useState(true);
   
-  // Estados para manejar los datos de la pasarela dinámica
+  // Estados para manejar los datos de la pasarela (Gazel Shop: solo PayPal)
   const [paymentData, setPaymentData] = useState<any>(null);
-  const [paymentProvider, setPaymentProvider] = useState<'stripe' | 'paypal' | 'mercadopago'>('stripe');
   const [apiError, setApiError] = useState('');
 
   const intentCreatedRef = useRef(false);
@@ -101,15 +100,6 @@ export const CheckoutPage = () => {
 
         if (data.success && data.data) {
           setPaymentData(data.data);
-          
-          // Detectar automáticamente el proveedor basado en la respuesta del backend
-          if (data.data.clientSecret) {
-            setPaymentProvider('stripe');
-          } else if (data.data.ppOrderId) {
-            setPaymentProvider('paypal');
-          } else if (data.data.preferenceId) {
-            setPaymentProvider('mercadopago');
-          }
         } else {
           throw new Error(data.error || 'Error al crear la intención de pago');
         }
@@ -169,7 +159,7 @@ export const CheckoutPage = () => {
               </div>
             )}
             <PaymentStep
-              provider={paymentProvider}
+              provider="paypal"
               paymentData={paymentData}
               customerData={customerData}
               dbConfig={dbConfig}

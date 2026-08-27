@@ -3,13 +3,11 @@ import { ShieldCheck, Loader2, ShoppingBag, MapPin, User, ChevronDown, ChevronUp
 import { useCart } from '../../CartContext';
 import type { ProjectConfig } from '../../interfaces/config.interface';
 
-// --- IMPORTACIÓN DE PASARELAS MODULARIZADAS ---
-import { MercadoPagoForm } from './MercadoPagoForm';
+// --- PASARELA DE PAGO: Gazel Shop solo cobra vía PayPal ---
 import { PayPalPaymentForm } from './PaypalForm';
-import { StripeForm } from './StripeForm';
 
 interface PaymentStepProps {
-  provider: 'stripe' | 'paypal' | 'mercadopago';
+  provider: 'paypal';
   paymentData: any;
   customerData: any;
   dbConfig: ProjectConfig;
@@ -143,26 +141,11 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ provider, paymentData,
         </div>
       </div>
 
-      {/* --- FORMULARIOS DE PASARELA (Switch dinámico) --- */}
-      {provider === 'stripe' && paymentData?.clientSecret && (
-        <StripeForm 
-          clientSecret={paymentData.clientSecret} 
-          customerData={customerData} 
-          finalTotal={finalTotal} 
-          cartCurrency={cartCurrency} 
-        />
-      )}
-
-      {provider === 'paypal' && paymentData?.ppOrderId && (
-        <PayPalPaymentForm 
-          ppOrderId={paymentData.ppOrderId} 
-          currency={dbConfig.base_currency} 
-        />
-      )}
-
-      {provider === 'mercadopago' && paymentData?.preferenceId && (
-        <MercadoPagoForm 
-          preferenceId={paymentData.preferenceId} 
+      {/* --- FORMULARIO DE PAGO: PayPal --- */}
+      {paymentData?.ppOrderId && (
+        <PayPalPaymentForm
+          ppOrderId={paymentData.ppOrderId}
+          currency={dbConfig.base_currency}
         />
       )}
     </div>

@@ -30,7 +30,7 @@ export const useCheckout = () => {
   const { cart, cartTotal, cartCurrency } = useCart();
   const [loading, setLoading] = useState(false);
   
-  // Control de Pasos: 'address' (Datos) -> 'payment' (Stripe)
+  // Control de Pasos: 'address' (Datos) -> 'payment' (PayPal)
   // El paso 'country' se omite porque la tienda tiene un país fijo en la config
   
   const [step, setStep] = useState<'country' | 'address' | 'payment'>('country');
