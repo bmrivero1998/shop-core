@@ -127,6 +127,21 @@ export const CheckoutPage = () => {
     );
   }
 
+  if (config.mode === 'catalog' || !config.isStoreOpen) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 text-center" style={{ backgroundColor: colors.background }}>
+        <div style={{ color: colors.text }}>
+          <AlertCircle size={40} className="mx-auto mb-4" style={{ color: colors.accent }} />
+          <p className="font-bold">
+            {config.mode === 'catalog'
+              ? 'Esta tienda funciona solo como catálogo. Consulta por WhatsApp para comprar.'
+              : 'Tienda cerrada temporalmente.'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (cart.length === 0) {
     return <EmptyCart />;
   }
