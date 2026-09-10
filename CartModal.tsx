@@ -1,6 +1,6 @@
 import { useCart } from './CartContext';
-import { STORE_CONFIG } from './config';
-import { 
+import { useProjectConfig } from './ProjectConfigContext';
+import {
   X, 
   Minus, 
   Plus, 
@@ -22,7 +22,8 @@ export const CartModal = () => {
     totalItems 
   } = useCart();
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const { config } = useProjectConfig();
 
   if (!isOpen) return null;
 
@@ -197,7 +198,7 @@ export const CartModal = () => {
 
                 <div className="bg-white/50 p-3 rounded-xl border border-dashed border-gray-200">
                   <p className="text-[10px] text-gray-500 font-bold uppercase leading-tight text-center">
-                    {STORE_CONFIG.text.shippingNote}
+                    {config.text.shippingNote}
                   </p>
                 </div>
               </div>
@@ -213,7 +214,7 @@ export const CartModal = () => {
                 style={{ 
                   backgroundColor: cart.length === 0 
                     ? '' 
-                    : STORE_CONFIG.theme.colors.accent 
+                    : config.theme.colors.accent
                 }}
               >
                 PAGAR PEDIDO

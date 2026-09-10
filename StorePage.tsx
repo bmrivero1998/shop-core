@@ -3,20 +3,23 @@ import axios from 'axios';
 import { useCart } from './CartContext';
 import { CartModal } from './CartModal';
 import { STORE_CONFIG } from './config';
-import { 
-  Search, 
-  ShoppingCart, 
-  X, 
-  ChevronLeft, 
-  ChevronRight, 
-  Minus, 
+import { useProjectConfig } from './ProjectConfigContext';
+import {
+  Search,
+  ShoppingCart,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Minus,
   Plus,
   ShoppingBag,
   Info,
   Filter,
   ChevronDown,
   Loader2,
-  AlertCircle
+  AlertCircle,
+  MessageCircle,
+  Store
 } from 'lucide-react';
 import { ALL_CATEGORIES, type Category } from './data/category';
 import { createPortal } from 'react-dom';
@@ -65,6 +68,8 @@ const ProductModal = ({
   onClose: () => void;
 }) => {
   const { addToCart, cart, cartCurrency } = useCart();
+  const { config } = useProjectConfig();
+  const isCatalogMode = config.mode === 'catalog';
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [qty, setQty] = useState(1);
@@ -125,6 +130,15 @@ const ProductModal = ({
       price: finalPrice
     });
     onClose();
+  };
+
+  const handleWhatsAppConsult = () => {
+    const variantText = selectedVariant ? ` (${selectedVariant.variant_name})` : '';
+    const mensaje = `Hola, me interesa este producto:\n\n` +
+      `🛍️ ${product.name}${variantText}\n` +
+      `Cantidad: ${qty}\n` +
+      `💰 $${(finalPrice / 100).toFixed(2)} ${product.currency?.toUpperCase() || ''}`;
+    window.open(`https://wa.me/${config.fullWhatsApp}?text=${encodeURIComponent(mensaje)}`, '_blank');
   };
 
   const handleImageNavigation = (direction: 'prev' | 'next') => {
@@ -272,33 +286,55 @@ const ProductModal = ({
             </div>
 
             {/* Botón Agregar - ANTES de variantes (mobile-first) */}
-            <button
-              disabled={currencyMismatch || !isAllSelected}
-              onClick={handleAddToCart}
-              className="w-full py-3 md:py-3.5 text-sm md:text-base font-bold rounded-xl transition-all duration-200"
-              style={{
-                backgroundColor: colors.accent,
-                color: "#fff",
-                opacity: currencyMismatch || !isAllSelected ? 0.5 : 1,
-                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                fontSize: "clamp(0.875rem, 3.5vw, 1rem)",
-              }}
-              onMouseEnter={(e) => {
-                if (!currencyMismatch && isAllSelected) {
-                  e.currentTarget.style.transform = "scale(1.02)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)";
-              }}
-            >
-              <span className="flex items-center justify-center gap-2">
-                <ShoppingCart size={18} />
-                {hasVariants && !selectedVariant
-                  ? "Elige variante"
-                  : "Agregar al carrito"}
-              </span>
-            </button>
+            {isCatalogMode ? (
+              <button
+                disabled={hasVariants && !selectedVariant}
+                onClick={handleWhatsAppConsult}
+                className="w-full py-3 md:py-3.5 text-sm md:text-base font-bold rounded-xl transition-all duration-200"
+                style={{
+                  backgroundColor: colors.accent,
+                  color: "#fff",
+                  opacity: hasVariants && !selectedVariant ? 0.5 : 1,
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                  fontSize: "clamp(0.875rem, 3.5vw, 1rem)",
+                }}
+              >
+                <span className="flex items-center justify-center gap-2">
+                  <MessageCircle size={18} />
+                  {hasVariants && !selectedVariant
+                    ? "Elige variante"
+                    : "Consultar por WhatsApp"}
+                </span>
+              </button>
+            ) : (
+              <button
+                disabled={currencyMismatch || !isAllSelected}
+                onClick={handleAddToCart}
+                className="w-full py-3 md:py-3.5 text-sm md:text-base font-bold rounded-xl transition-all duration-200"
+                style={{
+                  backgroundColor: colors.accent,
+                  color: "#fff",
+                  opacity: currencyMismatch || !isAllSelected ? 0.5 : 1,
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                  fontSize: "clamp(0.875rem, 3.5vw, 1rem)",
+                }}
+                onMouseEnter={(e) => {
+                  if (!currencyMismatch && isAllSelected) {
+                    e.currentTarget.style.transform = "scale(1.02)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                }}
+              >
+                <span className="flex items-center justify-center gap-2">
+                  <ShoppingCart size={18} />
+                  {hasVariants && !selectedVariant
+                    ? "Elige variante"
+                    : "Agregar al carrito"}
+                </span>
+              </button>
+            )}
 
             {/* VARIANTS */}
             {hasVariants && (
@@ -487,6 +523,9 @@ const ProductModal = ({
 
 // --- TARJETA DE PRODUCTO ---
 const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Product) => void }) => {
+  const { config } = useProjectConfig();
+  const isCatalogMode = config.mode === 'catalog';
+
   // ✅ Manejo correcto de imagen (igual que el bueno)
   let imageUrl = "";
   if (product.images) {
@@ -599,7 +638,7 @@ const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Produc
               color: colors.accent,
             }}
           >
-            Comprar
+            {isCatalogMode ? 'Ver detalles' : 'Comprar'}
           </button>
         </div>
       </div>
@@ -639,6 +678,12 @@ export const StorePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { setIsOpen, totalItems } = useCart();
+  const { config } = useProjectConfig();
+  // Sobreescribe los defaults del módulo con el theme/nombre que vengan de BD (por proyecto).
+  const colors = config.theme.colors;
+  const ui = config.theme.ui;
+  const storeName = config.storeName;
+  const isCatalogMode = config.mode === 'catalog';
 
   useEffect(() => {
     setLoading(true);
@@ -660,6 +705,16 @@ export const StorePage = () => {
     setSelectedProd(p);
     setIsModalOpen(true);
   };
+
+  if (!config.isStoreOpen) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center" style={{ backgroundColor: colors.background }}>
+        <Store size={48} className="mb-4" style={{ color: colors.accent }} />
+        <h2 className="text-xl font-bold" style={{ color: colors.text }}>{storeName}</h2>
+        <p className="mt-2 opacity-70" style={{ color: colors.text }}>Tienda cerrada temporalmente. Vuelve a intentarlo más tarde.</p>
+      </div>
+    );
+  }
 
   return (
     // Agregamos pt-[70px] para que todo baje sin chocar con el Navbar principal
@@ -703,7 +758,7 @@ export const StorePage = () => {
               className="font-black text-xl tracking-tighter uppercase text-black leading-none m-0"
               style={{ fontFamily: ui.fontFamily }}
             >
-              {STORE_CONFIG.storeName}
+              {storeName}
             </h1>
           </div>
         </div>
@@ -829,39 +884,41 @@ export const StorePage = () => {
         )}
       </main>
 
-      {/* 4. BOTÓN FLOTANTE DEL CARRITO */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-8 right-8 z-[30] text-white w-16 h-16 flex items-center justify-center border-[3px] border-white group"
-        style={{
-          backgroundColor: colors.accent,
-          borderRadius: '20px',
-          boxShadow: `0 8px 32px ${colors.accent}55, 0 2px 8px rgba(0,0,0,0.15)`,
-          transition: 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease',
-        }}
-        onMouseEnter={e => {
-          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.1)';
-        }}
-        onMouseLeave={e => {
-          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
-        }}
-        onMouseDown={e => {
-          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.94)';
-        }}
-        onMouseUp={e => {
-          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.1)';
-        }}
-      >
-        <ShoppingCart size={24} strokeWidth={2} />
-        {totalItems > 0 && (
-          <span
-            className="absolute -top-2.5 -right-2.5 text-white text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-white tabular-nums"
-            style={{ backgroundColor: '#111', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
-          >
-            {totalItems}
-          </span>
-        )}
-      </button>
+      {/* 4. BOTÓN FLOTANTE DEL CARRITO (oculto en modo catálogo, no hay checkout) */}
+      {!isCatalogMode && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-8 right-8 z-[30] text-white w-16 h-16 flex items-center justify-center border-[3px] border-white group"
+          style={{
+            backgroundColor: colors.accent,
+            borderRadius: '20px',
+            boxShadow: `0 8px 32px ${colors.accent}55, 0 2px 8px rgba(0,0,0,0.15)`,
+            transition: 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease',
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.1)';
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
+          }}
+          onMouseDown={e => {
+            (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.94)';
+          }}
+          onMouseUp={e => {
+            (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.1)';
+          }}
+        >
+          <ShoppingCart size={24} strokeWidth={2} />
+          {totalItems > 0 && (
+            <span
+              className="absolute -top-2.5 -right-2.5 text-white text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-white tabular-nums"
+              style={{ backgroundColor: '#111', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
+            >
+              {totalItems}
+            </span>
+          )}
+        </button>
+      )}
 
       {/* MODALES */}
       <ProductModal
@@ -870,7 +927,7 @@ export const StorePage = () => {
         onClose={() => setIsModalOpen(false)}
       />
 
-      <CartModal />
+      {!isCatalogMode && <CartModal />}
     </div>
   );
 };

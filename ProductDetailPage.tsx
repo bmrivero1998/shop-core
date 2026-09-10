@@ -3,25 +3,29 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from './CartContext';
 import { STORE_CONFIG } from './config';
-import { 
-  ShoppingCart, 
-  ChevronLeft, 
-  ChevronRight, 
-  Minus, 
-  Plus, 
+import { useProjectConfig } from './ProjectConfigContext';
+import {
+  ShoppingCart,
+  ChevronLeft,
+  ChevronRight,
+  Minus,
+  Plus,
   CreditCard,
   Loader2,
-  AlertCircle 
+  AlertCircle,
+  MessageCircle,
+  Store
 } from 'lucide-react';
 import { ALL_CATEGORIES } from './data/category';
-
-const colors = STORE_CONFIG.theme.colors;
 
 export const ProductDetailPage = () => {
   const { uuid } = useParams<{ uuid: string }>();
   const navigate = useNavigate();
   const { addToCart, setIsOpen } = useCart();
-  
+  const { config } = useProjectConfig();
+  const colors = config.theme.colors;
+  const isCatalogMode = config.mode === 'catalog';
+
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -60,6 +64,15 @@ export const ProductDetailPage = () => {
     </div>
   );
 
+  if (!config.isStoreOpen) return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 text-center">
+      <Store size={48} className="mb-4" style={{ color: colors.accent }} />
+      <h2 className="text-xl font-bold" style={{ color: colors.text }}>Tienda cerrada temporalmente</h2>
+      <p className="text-gray-500 mt-2">Vuelve a intentarlo más tarde.</p>
+      <button onClick={() => navigate('/')} className="mt-4 text-accent underline">Volver al inicio</button>
+    </div>
+  );
+
   const images = product.images?.split(",").filter(Boolean) || [];
   const finalPrice = selectedVariant?.price_override > 0 ? selectedVariant.price_override : product.price;
 
@@ -76,6 +89,15 @@ export const ProductDetailPage = () => {
     } else {
       setIsOpen(true); // Abre el modal lateral del carrito
     }
+  };
+
+  const handleWhatsAppConsult = () => {
+    const variantText = selectedVariant ? ` (${selectedVariant.variant_name})` : '';
+    const mensaje = `Hola, me interesa este producto:\n\n` +
+      `🛍️ ${product.name}${variantText}\n` +
+      `Cantidad: ${qty}\n` +
+      `💰 $${(finalPrice / 100).toFixed(2)} ${product.currency?.toUpperCase() || ''}`;
+    window.open(`https://wa.me/${config.fullWhatsApp}?text=${encodeURIComponent(mensaje)}`, '_blank');
   };
 
   return (
@@ -146,25 +168,36 @@ export const ProductDetailPage = () => {
           </div>
 
           {/* Botones de Acción */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {isCatalogMode ? (
             <button
-              onClick={() => handleAction(false)}
-              className="flex items-center justify-center gap-2 py-4 rounded-xl font-bold border-2 transition-all"
-              style={{ borderColor: colors.accent, color: colors.accent }}
-            >
-              <ShoppingCart size={20} />
-              Agregar al Carrito
-            </button>
-            
-            <button
-              onClick={() => handleAction(true)}
-              className="flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-white transition-all shadow-lg"
+              onClick={handleWhatsAppConsult}
+              className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-white transition-all shadow-lg"
               style={{ backgroundColor: colors.accent }}
             >
-              <CreditCard size={20} />
-              Comprar Ahora
+              <MessageCircle size={20} />
+              Consultar por WhatsApp
             </button>
-          </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button
+                onClick={() => handleAction(false)}
+                className="flex items-center justify-center gap-2 py-4 rounded-xl font-bold border-2 transition-all"
+                style={{ borderColor: colors.accent, color: colors.accent }}
+              >
+                <ShoppingCart size={20} />
+                Agregar al Carrito
+              </button>
+
+              <button
+                onClick={() => handleAction(true)}
+                className="flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-white transition-all shadow-lg"
+                style={{ backgroundColor: colors.accent }}
+              >
+                <CreditCard size={20} />
+                Comprar Ahora
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -84,3 +84,9 @@ git push origin [tu-rama]
 El archivo src/shop/config.ts es el único que debe ser modificado por instancia.
 
 No subir cambios de config.ts al repositorio shop-core a menos que sea para actualizar la estructura base. Los valores específicos del cliente (como el PROJECT_UUID) deben manejarse con cuidado para no sobreescribir otras tiendas.
+
+5. Configuración dinámica (Base de Datos)
+
+Desde este cambio, config.ts SOLO debe tener `PROJECT_UUID` y `API_URL` (identifican qué proyecto consultar) más valores de respaldo por si la API falla. Todo lo demás — nombre de la tienda, WhatsApp, tema/colores, textos, modo (shop/catalog), tipo de negocio, proveedor de pago activo, zips permitidos y llaves públicas de pago — se lee en tiempo real desde `metritrak-workers` (`GET /v1/projects_config/:projectUuid/config`) y se administra desde el panel de cliente/admin de MetriTrak (Ajustes → E-commerce, o "Configurar Tienda" en el panel de admin).
+
+El `CartProvider` ya envuelve la app con un `ProjectConfigProvider` (ver `ProjectConfigContext.tsx`), así que no hace falta cablear nada extra en el proyecto host: simplemente usa el hook `useProjectConfig()` en cualquier componente para leer `config.theme`, `config.storeName`, `config.mode`, `config.businessType`, `config.provider`, etc. Si la API no responde, se usan automáticamente los valores de `config.ts` como fallback.

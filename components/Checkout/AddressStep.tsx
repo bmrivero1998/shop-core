@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { STORE_CONFIG } from '../../config'; 
-import { 
+import { useProjectConfig } from '../../ProjectConfigContext';
+import {
   MapPin,  
   User, 
   Mail, 
@@ -35,13 +35,15 @@ export const AddressStep: React.FC<Props> = ({ checkout }) => {
 
   const [errors, setErrors] = useState<string[]>([]);
 
+  const { config } = useProjectConfig();
+
   // Variables para pintar el texto según el tema
-  const colors = STORE_CONFIG.theme.colors;
+  const colors = config.theme.colors;
   const textColorStyle = { color: colors.accent };
   const inputTextColorStyle = { color: colors.text };
 
   // Determinar si pedimos dirección (si es producto físico)
-  const isPhysical = STORE_CONFIG.businessType === 'physical';
+  const isPhysical = config.businessType === 'physical';
 
   const validateAndContinue = (e: React.FormEvent) => {
     e.preventDefault();

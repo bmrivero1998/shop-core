@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+import React, { useMemo, useState } from 'react';
+import { loadStripe, type Stripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { STORE_CONFIG } from '../../config';
+import { useProjectConfig } from '../../ProjectConfigContext';
 import { AlertTriangle, CreditCard, Loader2, Lock } from 'lucide-react';
-
-const stripePromise = STORE_CONFIG.STRIPE_ACCOUNT_ID 
-  ? loadStripe(STORE_CONFIG.STRIPE_PUBLIC_KEY, { stripeAccount: STORE_CONFIG.STRIPE_ACCOUNT_ID })
-  : loadStripe(STORE_CONFIG.STRIPE_PUBLIC_KEY);
 
 interface StripeFormInnerProps {
   customerData: any;
@@ -126,9 +123,18 @@ interface StripeFormProps {
 }
 
 export const StripeForm = ({ clientSecret, customerData, finalTotal, cartCurrency }: StripeFormProps) => {
+  const { config } = useProjectConfig();
+  const publicKey = config.dbConfig?.payment_public_keys?.stripe_public_key || STORE_CONFIG.STRIPE_PUBLIC_KEY;
+  const accountId = config.dbConfig?.payment_public_keys?.stripe_account_id || STORE_CONFIG.STRIPE_ACCOUNT_ID;
+
+  const stripePromise = useMemo<Promise<Stripe | null>>(
+    () => (accountId ? loadStripe(publicKey, { stripeAccount: accountId }) : loadStripe(publicKey)),
+    [publicKey, accountId]
+  );
+
   return (
-    <Elements 
-      stripe={stripePromise} 
+    <Elements
+      stripe={stripePromise}
       options={{ 
         clientSecret,
         appearance: {

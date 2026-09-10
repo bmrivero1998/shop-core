@@ -1,14 +1,15 @@
 // src/shop/components/Checkout/CheckoutProgress.tsx
 import React from 'react';
 import { Globe, MapPin, CreditCard, Check } from 'lucide-react';
-import { STORE_CONFIG } from '../../config';
+import { useProjectConfig } from '../../ProjectConfigContext';
 
 interface CheckoutProgressProps {
   step: 'country' | 'address' | 'payment';
 }
 
 export const CheckoutProgress: React.FC<CheckoutProgressProps> = ({ step }) => {
-  const colors = STORE_CONFIG.theme.colors;
+  const { config } = useProjectConfig();
+  const colors = config.theme.colors;
   
   const steps = [
     { key: 'country', label: 'País', icon: Globe },
