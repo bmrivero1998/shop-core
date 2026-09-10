@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CheckCircle2, AlertCircle, X } from 'lucide-react';
+import { ProjectConfigProvider } from './ProjectConfigContext';
 
 // --- TIPOS ---
 export interface CartItem {
@@ -180,39 +181,41 @@ const updateQuantity = (uuid: string, delta: number, variantUuid?: string) => {
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{
-      cart,
-      addToCart,
-      removeFromCart,
-      updateQuantity,
-      clearCart,
-      cartTotal,
-      cartCurrency,
-      totalItems,
-      isOpen,
-      setIsOpen
-    }}>
-      {children}
+    <ProjectConfigProvider>
+      <CartContext.Provider value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        cartTotal,
+        cartCurrency,
+        totalItems,
+        isOpen,
+        setIsOpen
+      }}>
+        {children}
 
-      {/* RENDER DEL TOAST */}
-      <div 
-        className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 transform ${
-          toast.show ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0 pointer-events-none'
-        }`}
-      >
-        <div className={`flex items-center gap-3 px-6 py-3 rounded-2xl shadow-2xl border ${
-          toast.type === 'error' 
-            ? 'bg-red-50 border-red-200 text-red-700' 
-            : 'bg-zinc-900 border-zinc-800 text-white'
-        }`}>
-          {toast.type === 'error' ? <AlertCircle size={20} /> : <CheckCircle2 size={20} className="text-emerald-400" />}
-          <span className="font-bold text-sm tracking-tight">{toast.message}</span>
-          <button onClick={() => setToast(prev => ({ ...prev, show: false }))} className="ml-2 opacity-50 hover:opacity-100">
-            <X size={16} />
-          </button>
+        {/* RENDER DEL TOAST */}
+        <div
+          className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 transform ${
+            toast.show ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0 pointer-events-none'
+          }`}
+        >
+          <div className={`flex items-center gap-3 px-6 py-3 rounded-2xl shadow-2xl border ${
+            toast.type === 'error'
+              ? 'bg-red-50 border-red-200 text-red-700'
+              : 'bg-zinc-900 border-zinc-800 text-white'
+          }`}>
+            {toast.type === 'error' ? <AlertCircle size={20} /> : <CheckCircle2 size={20} className="text-emerald-400" />}
+            <span className="font-bold text-sm tracking-tight">{toast.message}</span>
+            <button onClick={() => setToast(prev => ({ ...prev, show: false }))} className="ml-2 opacity-50 hover:opacity-100">
+              <X size={16} />
+            </button>
+          </div>
         </div>
-      </div>
-    </CartContext.Provider>
+      </CartContext.Provider>
+    </ProjectConfigProvider>
   );
 };
 

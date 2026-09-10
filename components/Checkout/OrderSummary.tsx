@@ -1,5 +1,5 @@
 import React from 'react';
-import { STORE_CONFIG } from '../../config';
+import { useProjectConfig } from '../../ProjectConfigContext';
 import { Package, ShoppingBag, Truck } from 'lucide-react';
 
 interface OrderSummaryProps {
@@ -10,17 +10,20 @@ interface OrderSummaryProps {
   selectedCountry?: string; // País que eligió el usuario en el paso 1
 }
 
-export const OrderSummary: React.FC<OrderSummaryProps> = ({ 
-  cart, 
-  total, 
+export const OrderSummary: React.FC<OrderSummaryProps> = ({
+  cart,
+  total,
   currency,
   dbConfig,
   selectedCountry
 }) => {
+  const { config } = useProjectConfig();
+  const isPhysical = config.businessType === 'physical';
+
   // LÓGICA DE ENVÍO DINÁMICA
   const calculateShipping = () => {
-    // Si es un servicio (Digital/Presencial) según config.ts, el envío es 0
-    if (STORE_CONFIG.businessType !== 'physical') return 0;
+    // Si es un servicio (Digital/Presencial) según la config del proyecto, el envío es 0
+    if (!isPhysical) return 0;
     if (!dbConfig) return 0;
 
     // Verificar si aplica Envío Gratis (si el umbral es > 0 y el total lo supera)
@@ -30,15 +33,15 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
 
     // Determinar si es local o internacional comparando con origin_country de BD
     const isInternational = selectedCountry && selectedCountry !== dbConfig.origin_country;
-    
-    return isInternational 
-      ? (dbConfig.shipping_intl_cost || 0) 
+
+    return isInternational
+      ? (dbConfig.shipping_intl_cost || 0)
       : (dbConfig.shipping_local_cost || 0);
   };
 
   const shippingCost = calculateShipping();
   const finalTotal = total + shippingCost;
-  const isFreeShipping = STORE_CONFIG.businessType === 'physical' && dbConfig && shippingCost === 0 && total > 0;
+  const isFreeShipping = isPhysical && dbConfig && shippingCost === 0 && total > 0;
 
   return (
     <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm mb-6 text-left">
@@ -83,7 +86,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
         </div>
         
         {/* Envío Dinámico (Solo se muestra si es producto físico) */}
-        {STORE_CONFIG.businessType === 'physical' && (
+        {isPhysical && (
           <div className="flex justify-between items-center">
             <span className="text-gray-400 text-sm font-bold flex items-center gap-1">
               <Truck size={14} /> Envío
@@ -110,10 +113,10 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
 
       {/* Nota de pie dinámica */}
       <div className="mt-6 p-4 bg-gray-50 rounded-2xl flex gap-3">
-        {STORE_CONFIG.businessType === 'physical' ? <Truck className="text-gray-400 shrink-0" size={18} /> : <ShoppingBag className="text-gray-400 shrink-0" size={18} />}
+        {isPhysical ? <Truck className="text-gray-400 shrink-0" size={18} /> : <ShoppingBag className="text-gray-400 shrink-0" size={18} />}
         <p className="text-[10px] text-gray-500 leading-relaxed font-medium">
-          {STORE_CONFIG.businessType === 'physical' 
-            ? (STORE_CONFIG.text.shippingNote || "Los tiempos de entrega pueden variar según tu ubicación.")
+          {isPhysical
+            ? (config.text.shippingNote || "Los tiempos de entrega pueden variar según tu ubicación.")
             : "Este es un servicio digital/presencial. No se requiere envío físico."}
         </p>
       </div>

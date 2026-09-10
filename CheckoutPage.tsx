@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useCart } from './CartContext';
 import { STORE_CONFIG } from './config';
 import { useCheckout } from './hooks/useCheckout';
+import { useProjectConfig } from './ProjectConfigContext';
 
 import { EmptyCart } from './components/Checkout/EmptyCart';
 import { CheckoutProgress } from './components/Checkout/CheckoutProgress';
@@ -13,58 +14,25 @@ import { PaymentStep } from './components/Checkout/PaymentStep';
 
 import { Loader2, AlertCircle } from 'lucide-react';
 
-// --- CONSTANTES DE TEMA ---
-const colors = STORE_CONFIG.theme.colors;
-const ui = {
-  borderRadius: '12px',
-  fontFamily: "'Inter', sans-serif",
-};
-
-export interface ProjectConfig {
-  project_uuid: string;
-  base_currency: string;
-  shipping_local_cost: number;
-  shipping_intl_cost: number;
-  free_shipping_threshold: number;
-  support_email: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-  origin_country: string;
-}
+import type { ProjectConfig } from './interfaces/config.interface';
+export type { ProjectConfig };
 
 export const CheckoutPage = () => {
   const { cart, cartCurrency } = useCart();
   const checkout = useCheckout();
   const { step, customerData, setLoading, selectedCountry } = checkout;
 
-  const [dbConfig, setDbConfig] = useState<ProjectConfig | null>(null);
-  const [configLoading, setConfigLoading] = useState(true);
-  
+  const { config, loading: configLoading } = useProjectConfig();
+  const dbConfig = config.dbConfig;
+  const colors = config.theme.colors;
+  const ui = config.theme.ui;
+
   // Estados para manejar los datos de la pasarela dinámica
   const [paymentData, setPaymentData] = useState<any>(null);
   const [paymentProvider, setPaymentProvider] = useState<'stripe' | 'paypal' | 'mercadopago'>('stripe');
   const [apiError, setApiError] = useState('');
 
   const intentCreatedRef = useRef(false);
-
-  // ✅ Hook 1: Carga de configuración del proyecto
-  useEffect(() => {
-    const fetchConfig = async () => {
-      try {
-        const { data } = await axios.get(
-          `${STORE_CONFIG.API_URL}/projects_config/${STORE_CONFIG.PROJECT_UUID}/config`
-        );
-        setDbConfig(data);
-      } catch (error) {
-        console.error('Error loading config:', error);
-      } finally {
-        setConfigLoading(false);
-      }
-    };
-
-    fetchConfig();
-  }, []);
 
   // ✅ Hook 2: Creación de Intención de Pago
   useEffect(() => {
@@ -91,18 +59,18 @@ export const CheckoutPage = () => {
             email: customerData.email,
             phone: customerData.phone,
             billing_address: customerData.billing_address,
-            shipping_address: STORE_CONFIG.businessType === 'physical' 
-                ? (customerData.shipping_address || customerData.billing_address) 
-                : customerData.billing_address 
+            shipping_address: config.businessType === 'physical'
+                ? (customerData.shipping_address || customerData.billing_address)
+                : customerData.billing_address
           },
           success_url:  `${window.location.origin}/checkout/success` || "https://example.com/success",
           failure_url: `${window.location.origin}/checkout/cancel` || "https://example.com/cancel",
-          locale: STORE_CONFIG.locale || 'es-MX',
+          locale: config.locale || 'es-MX',
         };
 
         const baseUrl = STORE_CONFIG.API_URL.replace(/\/v1\/?$/, '');
         const { data } = await axios.post(
-          `${baseUrl}/v2/payments/${STORE_CONFIG.provider}/create-intent`,
+          `${baseUrl}/v2/payments/${config.provider}/create-intent`,
           payload
         );
 

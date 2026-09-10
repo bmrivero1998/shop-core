@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useCart } from '../CartContext';
-import { STORE_CONFIG } from '../config';
+import { useProjectConfig } from '../ProjectConfigContext';
 
 // --- TIPOS ---
 export interface AddressData {
@@ -28,6 +28,7 @@ export interface CustomerData {
 
 export const useCheckout = () => {
   const { cart, cartTotal, cartCurrency } = useCart();
+  const { config } = useProjectConfig();
   const [loading, setLoading] = useState(false);
   
   // Control de Pasos: 'address' (Datos) -> 'payment' (Stripe)
@@ -72,7 +73,7 @@ export const useCheckout = () => {
   // --- LÓGICA DE VALIDACIÓN GEOGRÁFICA ---
   
   const checkShippingAvailability = (postalCode?: string): boolean => {
-    const { allowedZipCodes } = STORE_CONFIG.location;
+    const allowedZipCodes = config.allowedZipCodes;
 
     // 1. Si no hay restricciones, vendemos a todo el país
     if (!allowedZipCodes || allowedZipCodes.length === 0) return true;
@@ -97,7 +98,7 @@ export const useCheckout = () => {
                     `📦 Productos:\n${itemsList}\n\n` +
                     `Quedo pendiente del costo de envío.`;
 
-    window.open(`https://wa.me/${STORE_CONFIG.fullWhatsApp}?text=${encodeURIComponent(mensaje)}`, '_blank');
+    window.open(`https://wa.me/${config.fullWhatsApp}?text=${encodeURIComponent(mensaje)}`, '_blank');
   };
 
   // --- API DE CÓDIGOS POSTALES (ZIPPOPOTAM) ---

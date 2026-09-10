@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useCart } from './CartContext';
 import { CartModal } from './CartModal';
 import { STORE_CONFIG } from './config';
+import { useProjectConfig } from './ProjectConfigContext';
 import { 
   Search, 
   ShoppingCart, 
@@ -639,6 +640,11 @@ export const StorePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { setIsOpen, totalItems } = useCart();
+  const { config } = useProjectConfig();
+  // Sobreescribe los defaults del módulo con el theme/nombre que vengan de BD (por proyecto).
+  const colors = config.theme.colors;
+  const ui = config.theme.ui;
+  const storeName = config.storeName;
 
   useEffect(() => {
     setLoading(true);
@@ -703,7 +709,7 @@ export const StorePage = () => {
               className="font-black text-xl tracking-tighter uppercase text-black leading-none m-0"
               style={{ fontFamily: ui.fontFamily }}
             >
-              {STORE_CONFIG.storeName}
+              {storeName}
             </h1>
           </div>
         </div>

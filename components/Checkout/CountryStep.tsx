@@ -1,4 +1,5 @@
-import { SUPPORTED_COUNTRIES, STORE_CONFIG } from '../../config';
+import { SUPPORTED_COUNTRIES } from '../../config';
+import { useProjectConfig } from '../../ProjectConfigContext';
 import { Globe, ArrowRight, MessageCircle, AlertCircle, ChevronDown } from 'lucide-react';
 import type { CheckoutContext, ProjectConfig } from '../../interfaces/config.interface';
 
@@ -23,7 +24,8 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
 
   const canProceed = hasSelectedCountry && (!isInternational || (isInternational && hasIntlRate));
 
-  const colors = STORE_CONFIG.theme.colors;
+  const { config } = useProjectConfig();
+  const colors = config.theme.colors;
   const textColorStyle = { color: colors.accent };
   const inputTextColorStyle = { color: colors.text };
 

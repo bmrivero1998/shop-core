@@ -3,25 +3,26 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from './CartContext';
 import { STORE_CONFIG } from './config';
-import { 
-  ShoppingCart, 
-  ChevronLeft, 
-  ChevronRight, 
-  Minus, 
-  Plus, 
+import { useProjectConfig } from './ProjectConfigContext';
+import {
+  ShoppingCart,
+  ChevronLeft,
+  ChevronRight,
+  Minus,
+  Plus,
   CreditCard,
   Loader2,
-  AlertCircle 
+  AlertCircle
 } from 'lucide-react';
 import { ALL_CATEGORIES } from './data/category';
-
-const colors = STORE_CONFIG.theme.colors;
 
 export const ProductDetailPage = () => {
   const { uuid } = useParams<{ uuid: string }>();
   const navigate = useNavigate();
   const { addToCart, setIsOpen } = useCart();
-  
+  const { config } = useProjectConfig();
+  const colors = config.theme.colors;
+
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
