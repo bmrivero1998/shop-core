@@ -54,6 +54,11 @@ export const STORE_CONFIG = {
   // Llave Pública de Stripe
   STRIPE_PUBLIC_KEY: 'pk_live_51Rjrm1Llq8dRY3gU3hr6InTOsEvhoKdySXQp5Mx1duUZBRoFK9DkhTw1OGQTTIaNi0rYsvtUkhunpU4QVKypQu1v00uCU3SVUV',
   STRIPE_ACCOUNT_ID: 'acct_1TEOWZQ92gRrxpNm', // Solo si usas Connect
+  PAYPAL_CLIENT_ID: '',
+
+  // Pasarela de pago usada en el checkout (define la ruta /v2/payments/:provider/create-intent)
+  provider: 'stripe' as 'stripe' | 'paypal' | 'mercadopago',
+  locale: 'es-MX',
   // 1. Identidad y Contacto
   storeName: "Martin Riper Shop", 
   whatsappNumber: "525656398738", // Número de soporte completo

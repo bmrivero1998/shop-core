@@ -102,7 +102,7 @@ export const CheckoutPage = () => {
 
         const baseUrl = STORE_CONFIG.API_URL.replace(/\/v1\/?$/, '');
         const { data } = await axios.post(
-          `${baseUrl}/v2/payments/${STORE_CONFIG.provider}/create-intent`,
+          `${baseUrl}/v2/payments/${STORE_CONFIG.provider || 'stripe'}/create-intent`,
           payload
         );
 
