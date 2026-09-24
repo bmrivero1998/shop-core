@@ -40,7 +40,7 @@ export const MercadoPagoForm: React.FC<MercadoPagoFormProps> = ({ preferenceId }
   };
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-500">
+    <div className="space-y-4 animate-[shop-fade-in_0.5s_ease-out]">
       <Wallet
         initialization={initialization}
         onReady={() => {

@@ -14,7 +14,6 @@ import {
   Share2
 } from 'lucide-react';
 
-const colors = STORE_CONFIG.theme.colors;
 
 export const ProductDetailPage = () => {
   const { uuid } = useParams<{ uuid: string }>();
@@ -60,7 +59,7 @@ export const ProductDetailPage = () => {
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-white">
-      <Loader2 className="animate-spin" size={40} style={{ color: colors.accent }} />
+      <Loader2 className="animate-spin text-(--shop-accent)" size={40} />
     </div>
   );
 
@@ -71,8 +70,7 @@ export const ProductDetailPage = () => {
       <p className="text-gray-500 mt-2">Parece que el enlace ha expirado o el producto ya no existe.</p>
       <button 
         onClick={() => navigate('/')} 
-        className="mt-8 px-8 py-3 rounded-full font-bold text-white transition-transform active:scale-95"
-        style={{ backgroundColor: colors.accent }}
+        className="mt-8 px-8 py-3 rounded-full font-bold text-white transition-transform active:scale-95 bg-(--shop-accent)"
       >
         Volver a la tienda
       </button>
@@ -139,11 +137,11 @@ export const ProductDetailPage = () => {
         {/* Lado Derecho: Detalles */}
         <div className="flex-1 px-5 py-8 md:py-0 space-y-8">
           <div className="space-y-2">
-            <h1 className="text-3xl md:text-4xl font-black tracking-tight" style={{ color: colors.text }}>
+            <h1 className="text-3xl md:text-4xl font-black tracking-tight !text-(--shop-text)">
               {product.name}
             </h1>
             <div className="flex items-center gap-4">
-              <span className="text-3xl font-black" style={{ color: colors.accent }}>
+              <span className="text-3xl font-black text-(--shop-accent)">
                 ${(finalPrice / 100).toFixed(2)}
               </span>
               <span className="text-sm font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded">
@@ -194,16 +192,14 @@ export const ProductDetailPage = () => {
           <div className="hidden md:grid grid-cols-2 gap-4 pt-4">
             <button
               onClick={() => handleAction(false)}
-              className="flex items-center justify-center gap-3 py-5 rounded-2xl font-black border-2 transition-all hover:bg-gray-50 active:scale-95"
-              style={{ borderColor: colors.accent, color: colors.accent }}
+              className="flex items-center justify-center gap-3 py-5 rounded-2xl font-black border-2 transition-all hover:bg-gray-50 active:scale-95 border-(--shop-accent) text-(--shop-accent)"
             >
               <ShoppingCart size={22} />
               Añadir
             </button>
             <button
               onClick={() => handleAction(true)}
-              className="flex items-center justify-center gap-3 py-5 rounded-2xl font-black text-white transition-all shadow-xl hover:opacity-90 active:scale-95"
-              style={{ backgroundColor: colors.accent }}
+              className="flex items-center justify-center gap-3 py-5 rounded-2xl font-black text-white transition-all shadow-xl hover:opacity-90 active:scale-95 bg-(--shop-accent)"
             >
               <CreditCard size={22} />
               Comprar ahora
@@ -216,15 +212,13 @@ export const ProductDetailPage = () => {
       <div className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-gray-100 p-4 pb-8 z-50 flex gap-3">
         <button
           onClick={() => handleAction(false)}
-          className="flex-1 flex items-center justify-center py-4 rounded-2xl font-black border-2 active:scale-95 transition-transform"
-          style={{ borderColor: colors.accent, color: colors.accent }}
+          className="flex-1 flex items-center justify-center py-4 rounded-2xl font-black border-2 active:scale-95 transition-transform border-(--shop-accent) text-(--shop-accent)"
         >
           <ShoppingCart size={20} />
         </button>
         <button
           onClick={() => handleAction(true)}
-          className="flex-[3] flex items-center justify-center gap-3 py-4 rounded-2xl font-black text-white shadow-lg active:scale-95 transition-transform"
-          style={{ backgroundColor: colors.accent }}
+          className="flex-[3] flex items-center justify-center gap-3 py-4 rounded-2xl font-black text-white shadow-lg active:scale-95 transition-transform bg-(--shop-accent)"
         >
           <CreditCard size={20} />
           Comprar ahora

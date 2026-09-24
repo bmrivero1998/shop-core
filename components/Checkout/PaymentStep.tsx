@@ -46,7 +46,7 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ provider, paymentData,
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full max-w-lg mx-auto">
+    <div className="space-y-6 animate-[shop-fade-in-up_0.5s_ease-out] w-full max-w-lg mx-auto">
       
       {/* --- RESUMEN DEL PEDIDO (Tu diseño original) --- */}
       <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -63,7 +63,7 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ provider, paymentData,
 
         {/* Lista de Productos Desplegable */}
         {showProducts && (
-          <div className="mb-4 space-y-3 animate-in slide-in-from-top-2 duration-300">
+          <div className="mb-4 space-y-3 animate-[shop-fade-in-down_0.3s_ease-out]">
             {cart.map((item) => (
               <div key={item.uuid} className="flex gap-3 text-sm border-b border-gray-100 pb-2 last:border-0">
                 <div className="w-12 h-12 bg-white rounded-lg border border-gray-200 flex items-center justify-center shrink-0 overflow-hidden">

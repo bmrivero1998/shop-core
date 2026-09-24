@@ -22,13 +22,6 @@ import { ALL_CATEGORIES, type Category } from './data/category';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 
-// --- CONSTANTES DE TEMA ---
-const colors = STORE_CONFIG.theme.colors;
-const ui = {
-  borderRadius: '12px',
-  fontFamily: "'Inter', sans-serif",
-};
-
 // --- TIPOS ---
 export interface Variants {
     uuid:           string;
@@ -138,36 +131,16 @@ const ProductModal = ({
   return createPortal(
     <div
       onClick={onClose}
-      className="fixed inset-0 z-[9999] flex items-end md:items-center justify-center bg-black/70 backdrop-blur-sm"
-      style={{
-        animation: "fadeIn 0.2s ease",
-      }}
+      className="fixed inset-0 z-[9999] flex items-end md:items-center justify-center bg-black/70 backdrop-blur-sm animate-[shop-fade-in_0.2s_ease]"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full h-[85vh] md:h-auto md:max-h-[90vh] md:max-w-5xl flex flex-col md:flex-row overflow-hidden relative"
-        style={{
-          backgroundColor: colors.background,
-          borderRadius: `clamp(16px, 4vw, ${ui.borderRadius}) clamp(16px, 4vw, ${ui.borderRadius}) 0 0`,
-          borderTopLeftRadius: "clamp(16px, 4vw, 24px)",
-          borderTopRightRadius: "clamp(16px, 4vw, 24px)",
-          animation: "slideUp 0.3s ease",
-        }}
+        className="w-full h-[85vh] md:h-auto md:max-h-[90vh] md:max-w-5xl flex flex-col md:flex-row overflow-hidden relative bg-(--shop-bg) rounded-t-[clamp(16px,4vw,24px)] animate-[shop-slide-up_0.3s_ease] md:animate-[shop-slide-down-in_0.3s_ease]"
       >
         {/* CLOSE Button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 md:top-4 md:right-4 z-20 p-2 rounded-full bg-black/20 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none"
-          style={{ 
-            color: "#fff",
-            transition: "all 0.2s ease"
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.5)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.2)";
-          }}
+          className="absolute top-3 right-3 md:top-4 md:right-4 z-20 p-2 rounded-full text-white bg-black/20 hover:bg-black/50 md:bg-transparent md:hover:bg-black/50 backdrop-blur-sm md:backdrop-blur-none transition-all duration-200"
         >
           <X size={20} strokeWidth={2.5} />
         </button>
@@ -181,11 +154,9 @@ const ProductModal = ({
             <img
               src={mainImage}
               alt={product.name}
-              className="w-full h-full md:max-h-[400px] object-contain transition-transform duration-300"
-              style={{
-                cursor: "zoom-in",
-                transform: isImageZoomed ? "scale(1.5)" : "scale(1)",
-              }}
+              className={`w-full h-full md:max-h-[400px] object-contain transition-transform duration-300 cursor-zoom-in ${
+                isImageZoomed ? 'scale-150' : 'scale-100'
+              }`}
             />
 
             {/* Image Navigation */}
@@ -196,10 +167,7 @@ const ProductModal = ({
                     e.stopPropagation();
                     handleImageNavigation('prev');
                   }}
-                  className="absolute left-2 md:left-3 p-2 md:p-2.5 rounded-full bg-black/30 backdrop-blur-sm text-white hover:bg-black/50 transition-all"
-                  style={{ 
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.2)"
-                  }}
+                  className="absolute left-2 md:left-3 p-2 md:p-2.5 rounded-full bg-black/30 backdrop-blur-sm text-white hover:bg-black/50  transition-all shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
                 >
                   <ChevronLeft size={18} strokeWidth={2.5} />
                 </button>
@@ -209,10 +177,7 @@ const ProductModal = ({
                     e.stopPropagation();
                     handleImageNavigation('next');
                   }}
-                  className="absolute right-2 md:right-3 p-2 md:p-2.5 rounded-full bg-black/30 backdrop-blur-sm text-white hover:bg-black/50 transition-all"
-                  style={{ 
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.2)"
-                  }}
+                  className="absolute right-2 md:right-3 p-2 md:p-2.5 rounded-full bg-black/30 backdrop-blur-sm text-white hover:bg-black/50  transition-all shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
                 >
                   <ChevronRight size={18} strokeWidth={2.5} />
                 </button>
@@ -226,11 +191,9 @@ const ProductModal = ({
                         e.stopPropagation();
                         setCurrentImageIndex(idx);
                       }}
-                      className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all"
-                      style={{
-                        backgroundColor: idx === currentImageIndex ? colors.accent : "rgba(255,255,255,0.6)",
-                        transform: idx === currentImageIndex ? "scale(1.3)" : "scale(1)",
-                      }}
+                      className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all ${
+                        idx === currentImageIndex ? 'bg-(--shop-accent) scale-130' : 'bg-white/60 scale-100'
+                      }`}
                     />
                   ))}
                 </div>
@@ -240,33 +203,20 @@ const ProductModal = ({
         </div>
 
         {/* INFO Section - Scrollable en móvil */}
-        <div className="w-full md:w-1/2 flex flex-col overflow-y-auto" style={{ maxHeight: "100%" }}>
+        <div className="w-full md:w-1/2 flex flex-col overflow-y-auto max-h-full">
           <div className="p-4 md:p-6 space-y-3 md:space-y-4">
             
             {/* HEADER */}
             <div>
-              <span 
-                className="text-[10px] md:text-xs uppercase tracking-[0.15em] font-black"
-                style={{ color: colors.accent }}
-              >
+              <span className="text-[10px] md:text-xs uppercase tracking-[0.15em] font-black text-(--shop-accent)">
                 {category?.name || "Producto"}
               </span>
 
-              <h2
-                className="text-xl md:text-2xl font-bold mt-1"
-                style={{ 
-                  fontFamily: ui.fontFamily,
-                  color: colors.text,
-                  fontSize: "clamp(1.25rem, 5vw, 1.5rem)"
-                }}
-              >
+              <h2 className="font-bold mt-1 !font-(family-name:--shop-font) !text-(--shop-text) text-[clamp(1.25rem,5vw,1.5rem)] leading-7 md:leading-8">
                 {product.name}
               </h2>
 
-              <div
-                className="text-lg md:text-xl font-bold mt-2"
-                style={{ color: colors.accent }}
-              >
+              <div className="text-lg md:text-xl font-bold mt-2 text-(--shop-accent)">
                 ${(finalPrice / 100).toFixed(2)} {product.currency}
               </div>
             </div>
@@ -275,22 +225,7 @@ const ProductModal = ({
             <button
               disabled={currencyMismatch || !isAllSelected}
               onClick={handleAddToCart}
-              className="w-full py-3 md:py-3.5 text-sm md:text-base font-bold rounded-xl transition-all duration-200"
-              style={{
-                backgroundColor: colors.accent,
-                color: "#fff",
-                opacity: currencyMismatch || !isAllSelected ? 0.5 : 1,
-                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                fontSize: "clamp(0.875rem, 3.5vw, 1rem)",
-              }}
-              onMouseEnter={(e) => {
-                if (!currencyMismatch && isAllSelected) {
-                  e.currentTarget.style.transform = "scale(1.02)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)";
-              }}
+              className="w-full py-3 md:py-3.5 font-bold rounded-xl transition-all duration-200 bg-(--shop-accent) text-white text-[clamp(0.875rem,3.5vw,1rem)] leading-5 md:leading-6 shadow-[0_4px_12px_rgba(0,0,0,0.15)] enabled:hover:scale-[1.02] disabled:opacity-50"
             >
               <span className="flex items-center justify-center gap-2">
                 <ShoppingCart size={18} />
@@ -303,10 +238,7 @@ const ProductModal = ({
             {/* VARIANTS */}
             {hasVariants && (
               <div>
-                <p 
-                  className="text-xs md:text-sm mb-2 font-medium"
-                  style={{ color: colors.text }}
-                >
+                <p className="text-xs md:text-sm mb-2 font-medium text-(--shop-text)">
                   Selecciona una opción
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -314,28 +246,11 @@ const ProductModal = ({
                     <button
                       key={variant.uuid}
                       onClick={() => setSelectedVariant(variant)}
-                      className="px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm rounded-lg transition-all duration-200"
-                      style={{
-                        backgroundColor: selectedVariant?.uuid === variant.uuid
-                          ? colors.accent
-                          : `${colors.text}10`,
-                        color: selectedVariant?.uuid === variant.uuid
-                          ? "#fff"
-                          : colors.text,
-                        border: selectedVariant?.uuid === variant.uuid
-                          ? "none"
-                          : `1px solid ${colors.text}20`,
-                      }}
-                      onMouseEnter={(e) => {
-                        if (selectedVariant?.uuid !== variant.uuid) {
-                          e.currentTarget.style.backgroundColor = `${colors.text}20`;
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (selectedVariant?.uuid !== variant.uuid) {
-                          e.currentTarget.style.backgroundColor = `${colors.text}10`;
-                        }
-                      }}
+                      className={`px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm rounded-lg transition-all duration-200 ${
+                        selectedVariant?.uuid === variant.uuid
+                          ? 'bg-(--shop-accent) text-white border-0'
+                          : 'bg-(--shop-text)/6 hover:bg-(--shop-text)/12 text-(--shop-text) border border-(--shop-text)/12'
+                      }`}
                     >
                       {variant.variant_name}
                     </button>
@@ -345,57 +260,27 @@ const ProductModal = ({
             )}
 
             {/* Quantity Selector */}
-            <div className="flex justify-between items-center py-2 border-t border-b"
-              style={{ borderColor: `${colors.text}10` }}
-            >
-              <span 
-                className="text-sm md:text-base font-medium"
-                style={{ color: colors.text }}
-              >
+            <div className="flex justify-between items-center py-2 border-t border-b border-(--shop-text)/6">
+              <span className="text-sm md:text-base font-medium text-(--shop-text)">
                 Cantidad
               </span>
 
-              <div 
-                className="flex items-center p-0.5 md:p-1 gap-0.5 md:gap-1 rounded-xl"
-                style={{ 
-                  backgroundColor: `${colors.text}08`,
-                  border: `1px solid ${colors.text}10`
-                }}
-              >
+              <div className="flex items-center p-0.5 md:p-1 gap-0.5 md:gap-1 rounded-xl bg-(--shop-text)/3 border border-(--shop-text)/6">
                 <button
                   onClick={() => setQty((prev) => Math.max(1, prev - 1))}
                   disabled={qty === 1}
-                  className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg disabled:opacity-30 transition-colors"
-                  style={{ color: colors.text }}
-                  onMouseEnter={(e) => {
-                    if (qty > 1) {
-                      e.currentTarget.style.backgroundColor = `${colors.text}10`;
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                  }}
+                  className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg disabled:opacity-30 transition-colors text-(--shop-text) enabled:hover:bg-(--shop-text)/6"
                 >
                   <Minus size={14} strokeWidth={2.5} />
                 </button>
 
-                <span 
-                  className="w-8 md:w-10 text-center font-black text-sm md:text-base tabular-nums"
-                  style={{ color: colors.text }}
-                >
+                <span className="w-8 md:w-10 text-center font-black text-sm md:text-base tabular-nums text-(--shop-text)">
                   {qty}
                 </span>
 
                 <button
                   onClick={() => setQty((prev) => prev + 1)}
-                  className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg transition-colors"
-                  style={{ color: colors.text }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = `${colors.text}10`;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                  }}
+                  className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg transition-colors text-(--shop-text) hover:bg-(--shop-text)/6"
                 >
                   <Plus size={14} strokeWidth={2.5} />
                 </button>
@@ -404,81 +289,32 @@ const ProductModal = ({
 
             {/* DESCRIPTION */}
             <div>
-              <p 
-                className="text-xs md:text-sm uppercase mb-1 md:mb-2 font-bold"
-                style={{ color: colors.text }}
-              >
+              <p className="text-xs md:text-sm uppercase mb-1 md:mb-2 font-bold text-(--shop-text)">
                 Descripción
               </p>
 
-              <div 
-                className="text-xs md:text-sm max-h-24 md:max-h-28 overflow-y-auto leading-relaxed"
-                style={{ color: `${colors.text}CC` }}
-              >
+              <div className="text-xs md:text-sm max-h-24 md:max-h-28 overflow-y-auto leading-relaxed text-(--shop-text)/80">
                 {product.description || "Sin descripción disponible."}
               </div>
             </div>
 
             {isFashion && (
-              <div
-                className="text-[10px] md:text-xs p-2 md:p-3 rounded-lg flex items-start gap-2"
-                style={{ 
-                  backgroundColor: `${colors.accent}15`, 
-                  color: colors.text,
-                  border: `1px solid ${colors.accent}30`
-                }}
-              >
-                <Info size={14} className="flex-shrink-0 mt-0.5" style={{ color: colors.accent }} />
+              <div className="text-[10px] md:text-xs p-2 md:p-3 rounded-lg flex items-start gap-2 bg-(--shop-accent)/8 text-(--shop-text) border border-(--shop-accent)/19">
+                <Info size={14} className="flex-shrink-0 mt-0.5 text-(--shop-accent)" />
                 <span>La talla se confirmará vía WhatsApp después de tu compra.</span>
               </div>
             )}
 
             {/* Currency mismatch warning */}
             {currencyMismatch && (
-              <div
-                className="text-[10px] md:text-xs p-2 md:p-3 rounded-lg flex items-start gap-2"
-                style={{ 
-                  backgroundColor: "#ff444415", 
-                  color: colors.text,
-                  border: "1px solid #ff444430"
-                }}
-              >
-                <AlertCircle size={14} className="flex-shrink-0 mt-0.5" style={{ color: "#ff4444" }} />
+              <div className="text-[10px] md:text-xs p-2 md:p-3 rounded-lg flex items-start gap-2 bg-[#ff444415] text-(--shop-text) border border-[#ff444430]">
+                <AlertCircle size={14} className="flex-shrink-0 mt-0.5 text-[#ff4444]" />
                 <span>Tu carrito tiene productos en {cartCurrency}. Vacíalo para agregar este.</span>
               </div>
             )}
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes slideUp {
-          from {
-            transform: translateY(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @media (min-width: 768px) {
-          @keyframes slideUp {
-            from {
-              transform: translateY(-20px);
-              opacity: 0;
-            }
-            to {
-              transform: translateY(0);
-              opacity: 1;
-            }
-          }
-        }
-      `}</style>
     </div>,
     document.body
   );
@@ -503,23 +339,14 @@ const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Produc
   return (
     <div
       onClick={() => onOpen(product)}
-      className="group cursor-pointer flex flex-col h-full overflow-hidden rounded-2xl transition-all duration-300"
-      style={{
-        backgroundColor: colors.background,
-        boxShadow: `0 4px 12px ${colors.text}12`,
-      }}
+      className="group cursor-pointer flex flex-col h-full overflow-hidden rounded-2xl transition-all duration-300 bg-(--shop-bg) shadow-[0_4px_12px_color-mix(in_oklab,var(--shop-text)_7%,transparent)]"
     >
       {/* Imagen */}
       <div className="relative aspect-[4/5] overflow-hidden">
         
         {/* Categoría */}
         <span
-          className="absolute top-3 left-3 z-10 text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md"
-          style={{
-            backgroundColor: `${colors.background}E6`,
-            color: colors.text,
-            backdropFilter: 'blur(6px)'
-          }}
+          className="absolute top-3 left-3 z-10 text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-md bg-(--shop-bg)/90 text-(--shop-text) backdrop-blur-[6px]"
         >
           {category?.name || 'General'}
         </span>
@@ -546,11 +373,7 @@ const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Produc
               e.stopPropagation(); // 🔥 importante
               onOpen(product);
             }}
-            className="w-full py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all"
-            style={{
-              backgroundColor: colors.background,
-              color: colors.text,
-            }}
+            className="w-full py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all bg-(--shop-bg) text-(--shop-text)"
           >
             Ver detalles
           </button>
@@ -559,31 +382,19 @@ const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Produc
 
       {/* Info */}
       <div className="p-4 flex flex-col flex-grow">
-        <h3
-          className="font-bold text-sm leading-snug line-clamp-2 mb-2 transition-colors"
-          style={{ color: colors.text }}
-        >
+        <h3 className="font-bold text-sm leading-snug line-clamp-2 mb-2 transition-colors !text-(--shop-text)">
           {product.name}
         </h3>
 
         {product.description && (
-          <p
-            className="text-xs mb-3 line-clamp-3"
-            style={{ color: `${colors.text}99` }}
-          >
+          <p className="text-xs mb-3 line-clamp-3 text-(--shop-text)/60">
             {product.description}
           </p>
         )}
 
         {/* Footer */}
-        <div
-          className="mt-auto pt-3 border-t flex items-center justify-between"
-          style={{ borderColor: `${colors.text}1A` }}
-        >
-          <span
-            className="font-bold text-lg"
-            style={{ color: colors.accent }}
-          >
+        <div className="mt-auto pt-3 border-t flex items-center justify-between border-(--shop-text)/10">
+          <span className="font-bold text-lg text-(--shop-accent)">
             ${(product.price / 100).toFixed(2)}
           </span>
 
@@ -593,11 +404,7 @@ const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Produc
               e.stopPropagation();
               onOpen(product);
             }}
-            className="text-[10px] font-bold px-3 py-1 rounded-md uppercase tracking-wide transition-all"
-            style={{
-              backgroundColor: `${colors.accent}20`,
-              color: colors.accent,
-            }}
+            className="text-[10px] font-bold px-3 py-1 rounded-md uppercase tracking-wide transition-all bg-(--shop-accent)/12 text-(--shop-accent)"
           >
             Comprar
           </button>
@@ -609,14 +416,9 @@ const ProductCard = ({ product, onOpen }: { product: Product, onOpen: (p: Produc
 
 // --- SKELETON CARD ---
 const SkeletonCard = () => (
-  <div className="bg-white overflow-hidden flex flex-col h-full" style={{ borderRadius: '1.25rem' }}>
+  <div className="bg-white overflow-hidden flex flex-col h-full rounded-[1.25rem]">
     <div className="aspect-[4/5] bg-gradient-to-br from-gray-100 to-gray-200 animate-pulse relative overflow-hidden">
-      <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_infinite]"
-        style={{
-          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)',
-          animation: 'shimmer 1.8s infinite',
-        }}
-      />
+      <div className="absolute inset-0 -translate-x-full animate-[shop-shimmer_1.8s_infinite] bg-linear-to-r from-transparent via-white/60 to-transparent" />
     </div>
     <div className="p-4 flex flex-col gap-3 flex-grow">
       <div className="h-3 bg-gray-100 rounded-full animate-pulse w-3/4" />
@@ -664,23 +466,9 @@ export const StorePage = () => {
   return (
     // Agregamos pt-[70px] para que todo baje sin chocar con el Navbar principal
     <div className="min-h-screen bg-[#F7F7F8] font-sans pb-24 relative pt-[70px]">
-      <style>{`
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(200%); }
-        }
-        .cart-btn-pulse { animation: cartPulse 0.4s cubic-bezier(0.36,0.07,0.19,0.97); }
-        @keyframes cartPulse {
-          0%,100% { transform: scale(1); }
-          50% { transform: scale(1.18); }
-        }
-        .search-input::placeholder { color: #bbb; }
-      `}</style>
-
       {/* 1. TOP HEADER PREMIUM */}
       <nav
-        className="bg-white/85 backdrop-blur-xl border-b sticky top-[70px] z-40 px-4 md:px-8 h-16 flex items-center justify-between"
-        style={{ borderColor: 'rgba(0,0,0,0.07)' }}
+        className="bg-white/85 backdrop-blur-xl border-b border-black/7 sticky top-[70px] z-40 px-4 md:px-8 h-16 flex items-center justify-between"
       >
         <div className="flex items-center gap-4">
           {/* Botón de regreso minimalista y pro */}
@@ -699,10 +487,7 @@ export const StorePage = () => {
             <span className="text-[9px] text-gray-400 font-black tracking-[0.3em] uppercase mb-[2px]">
               Oficial
             </span>
-            <h1
-              className="font-black text-xl tracking-tighter uppercase text-black leading-none m-0"
-              style={{ fontFamily: ui.fontFamily }}
-            >
+            <h1 className="font-black text-xl tracking-tighter uppercase text-black leading-none m-0 !font-(family-name:--shop-font)">
               {STORE_CONFIG.storeName}
             </h1>
           </div>
@@ -718,8 +503,7 @@ export const StorePage = () => {
 
       {/* 2. BARRA DE HERRAMIENTAS STICKY */}
       <div
-        className="bg-white/95 backdrop-blur-md border-b sticky top-[134px] z-[30] px-4 py-3"
-        style={{ borderColor: 'rgba(0,0,0,0.06)', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}
+        className="bg-white/95 backdrop-blur-md border-b border-black/6 shadow-[0_4px_20px_rgba(0,0,0,0.04)] sticky top-[134px] z-[30] px-4 py-3"
       >
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-3 items-center justify-between">
 
@@ -794,18 +578,14 @@ export const StorePage = () => {
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24">
-            <div
-              className="w-20 h-20 rounded-3xl flex items-center justify-center mb-6"
-              style={{ backgroundColor: `${colors.accent}10` }}
-            >
-              <ShoppingBag style={{ color: colors.accent }} size={36} strokeWidth={1.5} />
+            <div className="w-20 h-20 rounded-3xl flex items-center justify-center mb-6 bg-(--shop-accent)/6">
+              <ShoppingBag className="text-(--shop-accent)" size={36} strokeWidth={1.5} />
             </div>
             <h3 className="text-lg font-black uppercase tracking-widest text-gray-800 mb-2">Sin resultados</h3>
             <p className="text-sm text-gray-400 mb-6">Intenta ajustar tu búsqueda o categoría.</p>
             <button
               onClick={() => { setSearch(''); setSelectedCat('all'); }}
-              className="text-xs font-black uppercase tracking-widest px-5 py-2.5 rounded-xl text-white transition-all hover:scale-105 active:scale-95"
-              style={{ backgroundColor: colors.accent, boxShadow: `0 4px 16px ${colors.accent}40` }}
+              className="text-xs font-black uppercase tracking-widest px-5 py-2.5 rounded-xl text-white transition-all hover:scale-105 active:scale-95 bg-(--shop-accent) shadow-[0_4px_16px_color-mix(in_oklab,var(--shop-accent)_25%,transparent)]"
             >
               Limpiar filtros
             </button>
@@ -822,31 +602,12 @@ export const StorePage = () => {
       {/* 4. BOTÓN FLOTANTE DEL CARRITO */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-8 right-8 z-[30] text-white w-16 h-16 flex items-center justify-center border-[3px] border-white group"
-        style={{
-          backgroundColor: colors.accent,
-          borderRadius: '20px',
-          boxShadow: `0 8px 32px ${colors.accent}55, 0 2px 8px rgba(0,0,0,0.15)`,
-          transition: 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease',
-        }}
-        onMouseEnter={e => {
-          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.1)';
-        }}
-        onMouseLeave={e => {
-          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
-        }}
-        onMouseDown={e => {
-          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.94)';
-        }}
-        onMouseUp={e => {
-          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.1)';
-        }}
+        className="fixed bottom-8 right-8 z-[30] text-white w-16 h-16 flex items-center justify-center border-[3px] border-white group rounded-[20px] bg-(--shop-accent) shadow-[0_8px_32px_color-mix(in_oklab,var(--shop-accent)_33%,transparent),0_2px_8px_rgba(0,0,0,0.15)] transition-[transform,box-shadow] duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-110 active:scale-[0.94]"
       >
         <ShoppingCart size={24} strokeWidth={2} />
         {totalItems > 0 && (
           <span
-            className="absolute -top-2.5 -right-2.5 text-white text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-white tabular-nums"
-            style={{ backgroundColor: '#111', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
+            className="absolute -top-2.5 -right-2.5 text-white text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-white tabular-nums bg-[#111] shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
           >
             {totalItems}
           </span>

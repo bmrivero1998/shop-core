@@ -121,7 +121,7 @@ export const PostalCodeInput: React.FC<PostalCodeInputProps> = ({
 
       {/* DROPDOWN DE SUGERENCIAS ESTILO METRITRAK */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute z-[60] mt-2 w-full bg-white border border-gray-100 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2">
+        <div className="absolute z-[60] mt-2 w-full bg-white border border-gray-100 rounded-2xl shadow-2xl overflow-hidden animate-[shop-fade-in-down_0.2s_ease-out]">
           <div className="p-2 bg-gray-50 border-b text-[10px] font-black uppercase tracking-widest text-gray-400">
             Resultados encontrados
           </div>

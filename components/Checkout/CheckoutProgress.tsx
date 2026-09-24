@@ -1,15 +1,12 @@
 // src/shop/components/Checkout/CheckoutProgress.tsx
 import React from 'react';
 import { Globe, MapPin, CreditCard, Check } from 'lucide-react';
-import { STORE_CONFIG } from '../../config';
 
 interface CheckoutProgressProps {
   step: 'country' | 'address' | 'payment';
 }
 
 export const CheckoutProgress: React.FC<CheckoutProgressProps> = ({ step }) => {
-  const colors = STORE_CONFIG.theme.colors;
-  
   const steps = [
     { key: 'country', label: 'País', icon: Globe },
     { key: 'address', label: 'Envío', icon: MapPin },
@@ -32,28 +29,26 @@ export const CheckoutProgress: React.FC<CheckoutProgressProps> = ({ step }) => {
             <React.Fragment key={s.key}>
               {/* Círculo del Step */}
               <div className="flex flex-col items-center gap-2 relative z-10">
-                <div 
-                  className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 border-2"
-                  style={{
-                    backgroundColor: isCompleted ? colors.accent : (isActive ? 'white' : '#f9fafb'),
-                    borderColor: isActive ? colors.accent : (isCompleted ? colors.accent : '#e5e7eb'),
-                    color: isCompleted ? 'white' : (isActive ? colors.accent : '#d1d5db'),
-                    boxShadow: isActive ? `0 20px 25px -5px ${colors.accent}20, 0 10px 10px -5px ${colors.accent}10` : 'none',
-                    transform: isActive ? 'scale(1.1)' : 'scale(1)'
-                  }}
+                <div
+                  className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 border-2 ${
+                    isCompleted
+                      ? 'bg-(--shop-accent) border-(--shop-accent) text-white'
+                      : isActive
+                        ? 'bg-white border-(--shop-accent) text-(--shop-accent) shadow-xl shadow-(--shop-accent)/12 scale-110'
+                        : 'bg-gray-50 border-gray-200 text-gray-300'
+                  }`}
                 >
                   {isCompleted ? (
-                    <Check size={20} strokeWidth={3} className="animate-in zoom-in duration-300" />
+                    <Check size={20} strokeWidth={3} className="animate-[shop-zoom-in_0.3s_ease-out]" />
                   ) : (
                     <Icon size={20} />
                   )}
                 </div>
                 
-                <span 
-                  className="text-[10px] font-black uppercase tracking-widest transition-colors duration-300"
-                  style={{
-                    color: isActive ? colors.accent : (isCompleted ? colors.text : '#9ca3af')
-                  }}
+                <span
+                  className={`text-[10px] font-black uppercase tracking-widest transition-colors duration-300 ${
+                    isActive ? 'text-(--shop-accent)' : isCompleted ? 'text-(--shop-text)' : 'text-gray-400'
+                  }`}
                 >
                   {s.label}
                 </span>
@@ -61,16 +56,11 @@ export const CheckoutProgress: React.FC<CheckoutProgressProps> = ({ step }) => {
 
               {/* Conector (Línea) */}
               {idx < steps.length - 1 && (
-                <div 
-                  className="w-16 md:w-24 h-1 mx-2 rounded-full overflow-hidden relative"
-                  style={{ backgroundColor: `${colors.text}15` }}
-                >
-                  <div 
-                    className="absolute inset-0 transition-all duration-700 ease-out"
-                    style={{
-                      backgroundColor: colors.accent,
-                      width: idx < currentIdx ? '100%' : '0%'
-                    }}
+                <div className="w-16 md:w-24 h-1 mx-2 rounded-full overflow-hidden relative bg-(--shop-text)/8">
+                  <div
+                    className={`absolute inset-0 transition-all duration-700 ease-out bg-(--shop-accent) ${
+                      idx < currentIdx ? 'w-full' : 'w-0'
+                    }`}
                   />
                 </div>
               )}

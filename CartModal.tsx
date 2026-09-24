@@ -208,13 +208,8 @@ export const CartModal = () => {
                 className={`w-full py-5 rounded-2xl font-black flex items-center justify-center gap-3 transition shadow-xl ${
                   cart.length === 0 
                     ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none' 
-                    : 'text-white active:scale-95 shadow-red-200'
+                    : 'bg-(--shop-accent) text-white active:scale-95 shadow-red-200'
                 }`}
-                style={{ 
-                  backgroundColor: cart.length === 0 
-                    ? '' 
-                    : STORE_CONFIG.theme.colors.accent 
-                }}
               >
                 PAGAR PEDIDO
                 <ArrowRight size={20} />

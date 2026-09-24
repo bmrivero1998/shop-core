@@ -1,4 +1,4 @@
-import { SUPPORTED_COUNTRIES, STORE_CONFIG } from '../../config';
+import { SUPPORTED_COUNTRIES } from '../../config';
 import { Globe, ArrowRight, MessageCircle, AlertCircle, ChevronDown } from 'lucide-react';
 import type { CheckoutContext, ProjectConfig } from '../../interfaces/config.interface';
 
@@ -23,10 +23,6 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
 
   const canProceed = hasSelectedCountry && (!isInternational || (isInternational && hasIntlRate));
 
-  const colors = STORE_CONFIG.theme.colors;
-  const textColorStyle = { color: colors.accent };
-  const inputTextColorStyle = { color: colors.text };
-
   const getCountryName = (code: string) =>
     SUPPORTED_COUNTRIES[code as keyof typeof SUPPORTED_COUNTRIES]?.name || 'Desconocido';
 
@@ -37,12 +33,12 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 text-left">
+    <div className="space-y-8 animate-[shop-fade-in-up_0.5s_ease-out] text-left">
       <div className="text-center space-y-2">
-        <h3 className="font-black text-2xl uppercase tracking-tighter" style={textColorStyle}>
+        <h3 className="font-black text-2xl uppercase tracking-tighter !text-(--shop-accent)">
           ¿A dónde enviamos?
         </h3>
-        <p className="text-sm" style={inputTextColorStyle}>
+        <p className="text-sm text-(--shop-text)">
           Selecciona tu país para calcular opciones de entrega.
         </p>
       </div>
@@ -51,14 +47,13 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
         <div className="relative group isolate">
           {/* Icono Mundo (Izquierda) */}
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-            <Globe style={{ color: colors.accent }} size={20} />
+            <Globe className="text-(--shop-accent)" size={20} />
           </div>
 
           <select
             value={selectedCountry || ''}
             onChange={(e) => setSelectedCountry(e.target.value)}
             className="w-full !appearance-none !bg-none bg-gray-50 !border-2 !border-transparent focus:!border-black !rounded-2xl !pl-12 !pr-10 !py-4 !font-bold !leading-normal !transition focus:!outline-none focus:!ring-0 !text-black"
-            style={inputTextColorStyle}
           >
             <option value="" disabled>
               🌍 Selecciona tu país
@@ -79,7 +74,7 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
 
         {/* MENSAJES DE ESTADO */}
         {!hasSelectedCountry && (
-          <div className="bg-gray-100 p-4 rounded-2xl text-xs font-bold" style={inputTextColorStyle}>
+          <div className="bg-gray-100 p-4 rounded-2xl text-xs font-bold text-(--shop-text)">
             Debes seleccionar un país para continuar.
           </div>
         )}
@@ -87,12 +82,12 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
         {hasSelectedCountry && !canProceed ? (
           <div className="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-2xl space-y-4">
             <div className="flex gap-3">
-              <AlertCircle style={{ color: colors.accent }} className="shrink-0" size={20} />
+              <AlertCircle className="shrink-0 text-(--shop-accent)" size={20} />
               <div>
-                <h4 className="font-black text-sm uppercase" style={textColorStyle}>
+                <h4 className="font-black text-sm uppercase !text-(--shop-accent)">
                   Cotización requerida
                 </h4>
-                <p className="text-xs leading-relaxed mt-1" style={inputTextColorStyle}>
+                <p className="text-xs leading-relaxed mt-1 text-(--shop-text)">
                   Enviamos a <strong>{getCountryName(selectedCountry!)}</strong>,
                   pero necesitamos calcular el costo de envío manualmente.
                 </p>
@@ -111,8 +106,8 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
             <div className="space-y-4">
               {isInternational && (
                 <div className="bg-blue-50 p-4 rounded-2xl flex gap-3 border border-blue-100">
-                  <AlertCircle style={{ color: colors.accent }} className="shrink-0" size={18} />
-                  <p className="text-[11px] font-bold leading-tight" style={inputTextColorStyle}>
+                  <AlertCircle className="shrink-0 text-(--shop-accent)" size={18} />
+                  <p className="text-[11px] font-bold leading-tight text-(--shop-text)">
                     Se aplicará la tarifa de envío internacional.
                   </p>
                 </div>

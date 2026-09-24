@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CheckCircle2, AlertCircle, X } from 'lucide-react';
+import './theme';
+import './shop.css';
 
 // --- TIPOS ---
 export interface CartItem {

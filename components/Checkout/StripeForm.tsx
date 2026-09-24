@@ -82,7 +82,7 @@ const StripeFormInner = ({ customerData, finalTotal, cartCurrency }: StripeFormI
       </div>
 
       {message && (
-        <div className="bg-red-50 border border-red-100 p-4 rounded-xl flex gap-3 text-red-600 animate-in fade-in">
+        <div className="bg-red-50 border border-red-100 p-4 rounded-xl flex gap-3 text-red-600 animate-[shop-fade-in_0.2s_ease-out]">
           <AlertTriangle size={18} className="shrink-0 mt-0.5" />
           <p className="text-xs font-bold leading-relaxed">{message}</p>
         </div>
