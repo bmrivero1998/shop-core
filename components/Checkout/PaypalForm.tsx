@@ -48,7 +48,7 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
 
       onSuccess?.(orderUuid);
 
-      window.location.href = `/checkout/success?order=${orderUuid}`;
+      window.location.href = `/success?order=${orderUuid}`;
     } catch (error: any) {
       console.error('Error al capturar el pago:', error);
       alert(error.message || 'No se pudo confirmar el pago.');

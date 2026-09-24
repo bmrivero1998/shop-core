@@ -95,16 +95,19 @@ export const CheckoutPage = () => {
                 ? (customerData.shipping_address || customerData.billing_address) 
                 : customerData.billing_address 
           },
-          success_url:  `${window.location.origin}/checkout/success` || "https://example.com/success",
-          failure_url: `${window.location.origin}/checkout/cancel` || "https://example.com/cancel",
+          success_url: `${window.location.origin}/success`,
+          failure_url: `${window.location.origin}/error`,
           locale: STORE_CONFIG.locale || 'es-MX',
         };
 
+        // Stripe vive en /v1/payments; PayPal y Mercado Pago solo existen en /v2/payments/:provider
+        const provider = STORE_CONFIG.provider || 'stripe';
         const baseUrl = STORE_CONFIG.API_URL.replace(/\/v1\/?$/, '');
-        const { data } = await axios.post(
-          `${baseUrl}/v2/payments/${STORE_CONFIG.provider || 'stripe'}/create-intent`,
-          payload
-        );
+        const createIntentUrl = provider === 'stripe'
+          ? `${baseUrl}/v1/payments/create-intent`
+          : `${baseUrl}/v2/payments/${provider}/create-intent`;
+
+        const { data } = await axios.post(createIntentUrl, payload);
 
         if (data.success && data.data) {
           setPaymentData(data.data);
@@ -121,7 +124,7 @@ export const CheckoutPage = () => {
           throw new Error(data.error || 'Error al crear la intención de pago');
         }
       } catch (error: any) {
-        setApiError(error.message);
+        setApiError(error.response?.data?.error || error.message);
         intentCreatedRef.current = false;
       } finally {
         setLoading(false);

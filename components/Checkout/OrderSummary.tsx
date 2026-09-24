@@ -1,6 +1,7 @@
 import React from 'react';
 import { STORE_CONFIG } from '../../config';
 import { Package, ShoppingBag, Truck } from 'lucide-react';
+import { calculateShipping as calculateShippingRule } from '../../utils/shipping';
 
 interface OrderSummaryProps {
   cart: any[];
@@ -23,17 +24,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
     if (STORE_CONFIG.businessType !== 'physical') return 0;
     if (!dbConfig) return 0;
 
-    // Verificar si aplica Envío Gratis (si el umbral es > 0 y el total lo supera)
-    if (dbConfig.free_shipping_threshold > 0 && total >= dbConfig.free_shipping_threshold) {
-      return 0;
-    }
-
-    // Determinar si es local o internacional comparando con origin_country de BD
-    const isInternational = selectedCountry && selectedCountry !== dbConfig.origin_country;
-    
-    return isInternational 
-      ? (dbConfig.shipping_intl_cost || 0) 
-      : (dbConfig.shipping_local_cost || 0);
+    return calculateShippingRule(total, dbConfig, selectedCountry || dbConfig.origin_country || 'MX').shippingCost;
   };
 
   const shippingCost = calculateShipping();

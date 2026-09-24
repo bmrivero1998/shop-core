@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ShieldCheck, Loader2, ShoppingBag, MapPin, User, ChevronDown, ChevronUp, Package } from 'lucide-react';
 import { useCart } from '../../CartContext';
 import type { ProjectConfig } from '../../interfaces/config.interface';
+import { calculateShipping } from '../../utils/shipping';
 
 // --- IMPORTACIÓN DE PASARELAS MODULARIZADAS ---
 import { MercadoPagoForm } from './MercadoPagoForm';
@@ -16,7 +17,7 @@ interface PaymentStepProps {
 }
 
 export const PaymentStep: React.FC<PaymentStepProps> = ({ provider, paymentData, customerData, dbConfig }) => {
-  const { cart, cartCurrency } = useCart();
+  const { cart } = useCart();
   const [showProducts, setShowProducts] = useState(false);
 
   if (!paymentData) {
@@ -28,16 +29,13 @@ export const PaymentStep: React.FC<PaymentStepProps> = ({ provider, paymentData,
     );
   }
 
-  // --- Lógica original de cálculo ---
-  const originCountry = dbConfig.origin_country || 'MX';
+  // El backend cobra en la moneda base del proyecto y calcula el envío con el
+  // país de facturación (incluido el envío gratis), así que aquí replicamos lo mismo.
+  const cartCurrency = dbConfig.base_currency || 'MXN';
   const destCountry = customerData.billing_address?.country || 'MX';
-  const isInternational = originCountry !== destCountry;
-  
-  const shippingCost = isInternational 
-    ? Number(dbConfig.shipping_intl_cost || 0)
-    : Number(dbConfig.shipping_local_cost || 0);
 
   const productsSubtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const { shippingCost, isInternational } = calculateShipping(productsSubtotal, dbConfig, destCountry);
   const finalTotal = productsSubtotal + shippingCost;
 
   const formatCurrency = (amount: number, currency: string) => {

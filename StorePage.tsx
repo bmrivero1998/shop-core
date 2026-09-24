@@ -726,9 +726,9 @@ export const StorePage = () => {
           {/* Input Búsqueda */}
           <div className="relative w-full md:max-w-md group">
             {/* Contenedor relativo para aislar el posicionamiento */}
-<div className="relative w-full group" style={{ isolation: 'isolate' }}>
+<div className="relative w-full group isolate">
   
-  {/* El Icono: Forzamos el z-index para que no quede detrás del input de Bootstrap */}
+  {/* El Icono: z-10 para que quede por encima del input */}
   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none z-10">
     <Search
       className="text-gray-400 group-focus-within:!text-black transition-colors duration-200"
@@ -737,18 +737,13 @@ export const StorePage = () => {
     />
   </div>
 
-  {/* El Input: Limpiamos las "mamadas" de Bootstrap */}
+  {/* El Input */}
   <input
     type="text"
     placeholder="Buscar producto..."
     value={search}
     onChange={e => setSearch(e.target.value)}
-    className="w-full !bg-gray-50 hover:!bg-gray-100/80 focus:!bg-white !border !border-gray-100 focus:!border-gray-300 !rounded-xl !pl-10 !pr-4 !py-2.5 !text-sm !font-medium !transition-all !duration-200 !outline-none !text-black !ring-0"
-    style={{ 
-      boxShadow: 'none', 
-      lineHeight: 'normal', // Bootstrap a veces rompe el centrado vertical con line-height
-      margin: 0             // Bootstrap añade margenes a veces
-    }}
+    className="w-full !m-0 !bg-gray-50 hover:!bg-gray-100/80 focus:!bg-white !border !border-gray-100 focus:!border-gray-300 !rounded-xl !pl-10 !pr-4 !py-2.5 !text-sm !font-medium !leading-normal !transition-all !duration-200 !outline-none !text-black !ring-0 !shadow-none"
   />
 </div>
         
@@ -772,12 +767,7 @@ export const StorePage = () => {
   <select
     value={selectedCat}
     onChange={(e) => setSelectedCat(e.target.value)}
-    className="w-full !appearance-none bg-white !border !border-gray-200 hover:!border-gray-300 focus:!border-gray-400 !rounded-xl !pl-9 !pr-10 !py-2.5 !text-[11px] !font-bold !uppercase !tracking-wide cursor-pointer !outline-none !text-black !transition-all !duration-200 !ring-0"
-    style={{ 
-      boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
-      backgroundImage: 'none', // Mata la flecha de Bootstrap que causa la sobreposición
-      lineHeight: 'normal'
-    }}
+    className="w-full !appearance-none !bg-none bg-white !border !border-gray-200 hover:!border-gray-300 focus:!border-gray-400 !rounded-xl !pl-9 !pr-10 !py-2.5 !text-[11px] !font-bold !uppercase !tracking-wide !leading-normal cursor-pointer !outline-none !text-black !transition-all !duration-200 !ring-0 !shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
   >
     <option value="all">Todas las Categorías</option>
     {ALL_CATEGORIES.map((c) => (

@@ -48,8 +48,7 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
       </div>
 
       <div className="space-y-4">
-        {/* CONTENEDOR DEL SELECT BLINDADO */}
-        <div className="relative group" style={{ isolation: 'isolate' }}>
+        <div className="relative group isolate">
           {/* Icono Mundo (Izquierda) */}
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
             <Globe style={{ color: colors.accent }} size={20} />
@@ -58,12 +57,8 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
           <select
             value={selectedCountry || ''}
             onChange={(e) => setSelectedCountry(e.target.value)}
-            className="w-full !appearance-none bg-gray-50 !border-2 !border-transparent focus:!border-black !rounded-2xl !pl-12 !pr-10 !py-4 !font-bold !leading-tight !transition !focus:outline-none !focus:ring-0 !text-black"
-            style={{ 
-              ...inputTextColorStyle,
-              backgroundImage: 'none', // Mata la flecha de Bootstrap
-              lineHeight: 'normal'
-            }}
+            className="w-full !appearance-none !bg-none bg-gray-50 !border-2 !border-transparent focus:!border-black !rounded-2xl !pl-12 !pr-10 !py-4 !font-bold !leading-normal !transition focus:!outline-none focus:!ring-0 !text-black"
+            style={inputTextColorStyle}
           >
             <option value="" disabled>
               🌍 Selecciona tu país
@@ -76,7 +71,7 @@ export const CountryStep = ({ checkout, dbConfig }: CountryStepProps) => {
             ))}
           </select>
 
-          {/* Icono Flecha (Derecha) - Para que no se vea el default de Bootstrap */}
+          {/* Icono Flecha (Derecha) - reemplaza la flecha nativa del select */}
           <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none z-10">
             <ChevronDown size={18} className="text-gray-400" />
           </div>

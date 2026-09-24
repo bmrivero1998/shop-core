@@ -31,7 +31,7 @@ const StripeFormInner = ({ customerData, finalTotal, cartCurrency }: StripeFormI
       const { error } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/checkout/success`, 
+          return_url: `${window.location.origin}/success`, 
           payment_method_data: {
             billing_details: {
               name: customerData.name,
